@@ -5,7 +5,7 @@ from datetime import date
 
 import pytest
 
-from collector.build_db import bucket_of, build, norm_name, parse_trade
+from collector.build_db import bucket_of, build, match_complexes, norm_name, parse_trade
 from collector.common import parse_response
 from collector.fetch_trades import months_back
 
@@ -99,3 +99,11 @@ def test_build_matches_and_computes_growth(tmp_path):
     assert tuple(sang) == ("A200", "59")  # 지번 매칭
     households = conn.execute("SELECT households, build_year FROM complexes WHERE kapt_code='A100'").fetchone()
     assert tuple(households) == (1829, 2004)
+
+
+def test_match_eup_myeon_ri():
+    # 읍·면 지역: 실거래는 "공도읍 용두리", K-apt 목록은 as3=공도읍, as4=용두리, 이름도 다르다.
+    complexes = [{"kapt_code": "A1", "name": "공도주은풍림", "sgg_cd": "41550", "umd_nm": "공도읍 용두리",
+                  "addr": "경기도 안성시 공도읍 용두리 752 공도주은풍림"}]
+    trades = [{"apt_seq": "s1", "sgg_cd": "41550", "umd_nm": "공도읍 용두리", "apt_nm": "주은풍림", "jibun": "752"}]
+    assert match_complexes(trades, complexes) == {"s1": "A1"}

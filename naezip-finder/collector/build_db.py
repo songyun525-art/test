@@ -94,7 +94,8 @@ def load_complexes(raw_dir=RAW_DIR) -> list[dict]:
                 "name": c.get("kaptName") or info.get("kaptName", ""),
                 "sgg_cd": (c.get("bjdCode") or info.get("bjdCode") or path.stem)[:5],
                 "bjd_code": c.get("bjdCode", ""),
-                "umd_nm": c.get("as3", ""),
+                # 읍·면 지역은 as3=읍면, as4=리. 실거래 umdNm("공도읍 용두리")과 같은 모양으로 맞춘다.
+                "umd_nm": " ".join(x for x in (c.get("as3"), c.get("as4")) if x),
                 "addr": info.get("kaptAddr", ""),
                 "road_addr": info.get("doroJuso", ""),
                 "households": to_int(info.get("kaptdaCnt")),
@@ -172,7 +173,8 @@ def match_complexes(trades: list[dict], complexes: list[dict]) -> dict[str, str]
             continue
         key = (t["sgg_cd"], t["umd_nm"])
         name = norm_name(t["apt_nm"])
-        code = by_name.get((*key, name)) or by_jibun.get((t["sgg_cd"], t["umd_nm"], t["jibun"]))
+        dong = t["umd_nm"].split()[-1] if t["umd_nm"] else ""  # "공도읍 용두리" → 주소의 "용두리"
+        code = by_name.get((*key, name)) or by_jibun.get((t["sgg_cd"], dong, t["jibun"]))
         if not code and name:
             cands = [c for c in by_umd.get(key, []) if name in norm_name(c["name"]) or norm_name(c["name"]) in name]
             if len(cands) == 1:
