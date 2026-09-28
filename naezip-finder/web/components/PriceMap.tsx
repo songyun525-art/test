@@ -65,9 +65,9 @@ export default function PriceMap() {
       const Lf = (mod as unknown as { default?: typeof L }).default ?? (mod as unknown as typeof L);
       leaflet.current = Lf;
       const m = Lf.map(box.current, { zoomControl: false, preferCanvas: true }).setView([37.42, 127.03], 10);
-      Lf.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
-        subdomains: "abcd",
+      // OpenStreetMap 기본 타일 (키 필요 없음)
+      Lf.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         maxZoom: 19,
       }).addTo(m);
       Lf.control.zoom({ position: "bottomright" }).addTo(m);
