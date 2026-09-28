@@ -1,10 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
-import Sidebar from "./Sidebar";
+import { useEffect, useRef, useState } from "react";
 import Hero from "./Hero";
 import Compare, { slotPrice, type Slot } from "./Compare";
 import MapPanel from "./MapPanel";
+import DetailTable from "./DetailTable";
 import ScorePanel from "./ScorePanel";
 import { MetricsTable, PriceChart } from "./PriceChart";
 import { HojaePanel, Recommendations } from "./Bottom";
@@ -25,6 +25,15 @@ export default function Dashboard() {
   const [weights, setWeights] = useState<Weights>(DEFAULT_WEIGHTS);
   const [notice, setNotice] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
+
+  // 다른 화면에서 "비교하기"로 넘어온 단지 (?compare=id:면적)를 첫 번째 칸에 넣습니다.
+  useEffect(() => {
+    const [id, area] = (new URLSearchParams(window.location.search).get("compare") ?? "").split(":");
+    const c = complexes.find((x) => x.id === id);
+    if (!c) return;
+    const a = c.sizes.some((z) => z.area === Number(area)) ? Number(area) : c.sizes[0].area;
+    setSlots((prev) => [{ complex: c, area: a }, ...prev.filter((s) => s.complex.id !== c.id)].slice(0, 3));
+  }, []);
 
   const base = slots[0];
   const recs = base ? recommend(slotPrice(base), slots.map((s) => s.complex.id), region, weights) : [];
@@ -52,9 +61,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="app">
-      <Sidebar />
-      <main className="main">
+    <>
         <Hero region={region} onRegion={setRegion} onPick={(c) => add(c)} inputRef={searchRef} />
         {notice && <div className="toast" role="status">{notice}</div>}
         <div className="grid">
@@ -75,6 +82,7 @@ export default function Dashboard() {
                 <PriceChart slots={slots} />
                 <MetricsTable slots={slots} />
               </div>
+              <DetailTable slots={slots} />
             </>
           ) : (
             <section className="panel wide empty">비교할 단지를 위 검색창에서 골라 주세요.</section>
@@ -92,7 +100,6 @@ export default function Dashboard() {
         <footer className="foot muted tiny">
           지금 보이는 숫자는 모두 화면 확인용 샘플입니다. 실거래 기준가는 국토교통부 실거래가 최근 3개월 평균이며, 호가를 직접 입력하면 그 값으로 추천을 다시 계산합니다.
         </footer>
-      </main>
-    </div>
+    </>
   );
 }

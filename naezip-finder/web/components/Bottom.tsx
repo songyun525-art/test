@@ -72,14 +72,16 @@ export function Recommendations({
   );
 }
 
-const TABS = ["전체", "GTX", "신규 노선", "정비사업"] as const;
-const BADGE_CLASS: Record<Hojae["category"], string> = { GTX: "b-purple", "신규 노선": "b-blue", 정비사업: "b-green" };
+const TABS = ["전체", "GTX", "신규 노선", "정비·개발", "일자리"] as const;
+const BADGE_CLASS: Record<Hojae["category"], string> = { GTX: "b-purple", "신규 노선": "b-blue", "정비·개발": "b-green", 일자리: "b-orange" };
 
 export function HojaePanel() {
   const [tab, setTab] = useState<(typeof TABS)[number]>("전체");
-  const list = hojaeList.filter((h) => tab === "전체" || h.category === tab);
+  const [all, setAll] = useState(false);
+  const filtered = hojaeList.filter((h) => tab === "전체" || h.category === tab);
+  const list = all ? filtered : filtered.slice(0, 7);
   return (
-    <section className="panel hojae-panel">
+    <section className="panel hojae-panel" id="hojae">
       <div className="panel-head">
         <h2>주요 호재 정보</h2>
         <div className="pill-tabs right">
@@ -100,7 +102,10 @@ export function HojaePanel() {
           </li>
         ))}
       </ul>
-      <p className="tiny muted">샘플 목록입니다. 일정은 공식 발표로 확인이 필요해요.</p>
+      {filtered.length > 7 && (
+        <button className="link-btn" onClick={() => setAll(!all)}>{all ? "접기" : `${filtered.length - 7}개 더 보기`}</button>
+      )}
+      <p className="tiny muted">공개된 계획을 정리한 목록이에요. 개통·완공 시기는 바뀔 수 있어요.</p>
     </section>
   );
 }

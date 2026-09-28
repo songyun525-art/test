@@ -44,13 +44,14 @@ const growthIndex = (c: Complex) =>
   c.growth.y1 * 0.2 + c.growth.y3 * 0.3 + c.growth.y5 * 0.3 + (c.growth.y10 / 2) * 0.2;
 const allGrowth = complexes.map(growthIndex);
 
-const HOJAE_POINTS: Record<Hojae["category"], number> = { GTX: 35, "신규 노선": 20, 정비사업: 15 };
+const HOJAE_POINTS: Record<Hojae["category"], number> = { GTX: 25, "신규 노선": 15, "정비·개발": 10, 일자리: 10 };
+const STATUS_FACTOR: Record<Hojae["status"], number> = { 개통: 1, "공사 중": 0.9, "진행 중": 0.7, 계획: 0.5 };
 
 export function subScores(c: Complex): Record<ScoreKey, number> {
   const station = 100 - Math.min(c.stationMeters, 1500) / 15;
   const commute = 100 - Math.max(0, c.gangnamMinutes - 15) * 1.4;
   const age = CURRENT_YEAR - c.year;
-  const hojae = nearbyHojae(c).reduce((s, h) => s + HOJAE_POINTS[h.category], 45);
+  const hojae = nearbyHojae(c).reduce((s, h) => s + HOJAE_POINTS[h.category] * STATUS_FACTOR[h.status], 50);
   return {
     location: Math.round(clamp(station * 0.5 + commute * 0.5)),
     growth: Math.round(clamp(30 + percentile(allGrowth, growthIndex(c)) * 0.7)),
@@ -115,3 +116,13 @@ export function recommend(basePrice: number, excludeIds: string[], region: strin
 
 export const formatEok = (v: number) => `${v.toFixed(1)}억`;
 export const pct = (v: number) => `${v >= 0 ? "+" : ""}${Math.round(v * 100)}%`;
+
+// 전용면적 버킷: 58·52·53㎡처럼 애매한 평수는 59로, 76~94㎡는 84로 봅니다.
+export type Bucket = "59" | "84" | "기타";
+export function bucketOf(area: number): Bucket {
+  if (area >= 45 && area < 70) return "59";
+  if (area >= 70 && area < 95) return "84";
+  return "기타";
+}
+
+export const sizeLabel = (area: number, pyeong: number) => `전용 ${area}㎡ (${pyeong}평)`;

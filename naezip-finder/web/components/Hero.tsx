@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Icon from "./Icon";
 import { complexes, regions, type Complex } from "@/lib/data";
 
-function Skyline() {
+export function Skyline() {
   const towers = [
     [520, 70, 34], [560, 110, 30], [596, 150, 36], [640, 95, 28], [676, 175, 40], [724, 130, 32],
     [762, 205, 42], [812, 160, 36], [856, 120, 30], [894, 190, 40], [942, 140, 34], [984, 100, 30],
