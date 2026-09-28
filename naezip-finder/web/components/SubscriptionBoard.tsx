@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { regions } from "@/lib/data";
 import { formatEok } from "@/lib/score";
-import { daysUntil, gajeom, marketCompare, statusOf, subscriptions, type SubStatus } from "@/lib/subscription";
+import { DATA_FETCHED_AT, daysUntil, gajeom, marketCompare, statusOf, subscriptions, type SubStatus } from "@/lib/subscription";
+
+// 주변 시세 비교는 실제 단지 데이터가 들어오면 켭니다 (지금은 샘플 단지라 비교가 부정확해요).
+const SHOW_MARKET = false;
 
 const TABS: ("전체" | SubStatus)[] = ["전체", "접수 중", "접수 예정", "발표 대기", "발표 완료"];
 const STATUS_CLASS: Record<SubStatus, string> = { "접수 중": "st-live", "접수 예정": "st-soon", "발표 대기": "st-wait", "발표 완료": "st-done" };
@@ -28,13 +31,17 @@ export default function SubscriptionBoard() {
   const [region, setRegion] = useState("경기도 전체");
   const [g, setG] = useState({ homelessYears: 5, dependents: 2, accountYears: 7 });
   const score = gajeom(g);
+  // 서버에서 만든 화면은 수집일 기준, 브라우저에서는 오늘 날짜 기준으로 상태를 다시 계산합니다.
+  const [today, setToday] = useState(DATA_FETCHED_AT);
+  useEffect(() => setToday(new Date().toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" })), []);
+  const [limit, setLimit] = useState(12);
 
   const list = subscriptions
-    .filter((s) => tab === "전체" || statusOf(s) === tab)
+    .filter((s) => tab === "전체" || statusOf(s, today) === tab)
     .filter((s) => region === "경기도 전체" || s.city === region)
     .sort((a, b) => {
       const order: SubStatus[] = ["접수 중", "접수 예정", "발표 대기", "발표 완료"];
-      return order.indexOf(statusOf(a)) - order.indexOf(statusOf(b)) || (statusOf(a) === "발표 완료" ? b.applyStart.localeCompare(a.applyStart) : a.applyStart.localeCompare(b.applyStart));
+      return order.indexOf(statusOf(a, today)) - order.indexOf(statusOf(b, today)) || (statusOf(a, today) === "발표 완료" ? b.applyStart.localeCompare(a.applyStart) : a.applyStart.localeCompare(b.applyStart));
     });
 
   return (
@@ -54,12 +61,12 @@ export default function SubscriptionBoard() {
           <p className="empty muted">조건에 맞는 분양 일정이 없어요.</p>
         ) : (
           <ul className="sub-list">
-            {list.map((s) => {
-              const st = statusOf(s);
-              const main = s.sizes.find((z) => z.area >= 70 && z.area < 95) ?? s.sizes[0];
+            {list.slice(0, limit).map((s) => {
+              const st = statusOf(s, today);
+              const main = s.sizes.find((z) => z.area >= 76 && z.area < 95) ?? s.sizes[0]; // 수집 스크립트의 대표 평형과 같은 기준
               const mk = marketCompare(s, main.area);
               const gap = mk ? (main.price - mk.avg) / mk.avg : null;
-              const dday = st === "접수 예정" ? daysUntil(s.applyStart) : st === "접수 중" ? daysUntil(s.applyEnd) : st === "발표 대기" ? daysUntil(s.winners) : null;
+              const dday = st === "접수 예정" ? daysUntil(s.applyStart, today) : st === "접수 중" ? daysUntil(s.applyEnd, today) : st === "발표 대기" ? daysUntil(s.winners, today) : null;
               return (
                 <li key={s.id} className="sub-card">
                   <div className="sub-top">
@@ -70,16 +77,16 @@ export default function SubscriptionBoard() {
                         {dday === 0 ? "오늘" : `D-${dday}`}
                       </span>
                     )}
-                    <span className="tiny muted right">{s.type}</span>
+                    <span className="tiny muted right">{s.type}{s.priceCap ? " · 분양가상한제" : ""}{s.regulated ? " · 규제지역" : ""}</span>
                   </div>
-                  <h3>{s.name}</h3>
-                  <p className="tiny muted">{s.city} {s.district} · {s.households.toLocaleString()}세대</p>
+                  <h3><a href={s.url} target="_blank" rel="noreferrer">{s.name}</a></h3>
+                  <p className="tiny muted">{s.city} {s.district} · 공급 {s.households.toLocaleString()}세대{s.moveIn ? ` · 입주 ${s.moveIn}` : ""}</p>
                   <div className="sub-sizes">
                     {s.sizes.map((z) => (
                       <span key={z.area}>{z.area}㎡ <b>{formatEok(z.price)}</b></span>
                     ))}
                   </div>
-                  {mk && gap !== null && (
+                  {SHOW_MARKET && mk && gap !== null && (
                     <p className="sub-market">
                       {main.area}㎡ 분양가가 주변 시세({formatEok(mk.avg)})보다{" "}
                       <b className={gap < 0 ? "chg down" : "chg up"}>{Math.abs(gap) < 0.01 ? "비슷해요" : gap < 0 ? `${Math.round(-gap * 100)}% 싸요` : `${Math.round(gap * 100)}% 비싸요`}</b>
@@ -87,22 +94,28 @@ export default function SubscriptionBoard() {
                     </p>
                   )}
                   <ol className="timeline">
-                    {([["공고", s.announce], ["1순위 접수", `${md(s.applyStart)}~${md(s.applyEnd)}`], ["당첨 발표", s.winners]] as const).map(([k, v]) => (
+                    {([["공고", s.announce], ["청약 접수", `${md(s.applyStart)}~${md(s.applyEnd)}`], ["당첨 발표", s.winners]] as const).map(([k, v]) => (
                       <li key={k}><span className="tiny muted">{k}</span><b>{v.includes("~") ? v : md(v)}</b></li>
                     ))}
                   </ol>
-                  {st === "발표 완료" && s.cutline !== undefined && (
+                  {st === "발표 완료" && s.cutline !== null && (
                     <p className={score.total >= s.cutline ? "cut ok" : "cut"}>
-                      84㎡ 최저 당첨 {s.cutline}점 · 경쟁률 {s.competition}:1 · 내 가점 {score.total}점이면{" "}
+                      {main.area}㎡ 해당지역 최저 당첨 {s.cutline}점{s.competition !== null ? ` · 1순위 경쟁률 ${s.competition}:1` : ""} · 내 가점 {score.total}점이면{" "}
                       <b>{score.total >= s.cutline ? "당첨권이었어요" : `${s.cutline - score.total}점 부족했어요`}</b>
                     </p>
+                  )}
+                  {st === "발표 완료" && s.cutline === null && s.competition !== null && (
+                    <p className="cut">{main.area}㎡ 1순위 경쟁률 {s.competition}:1{s.competition < 1 ? " (미달)" : ""}</p>
                   )}
                 </li>
               );
             })}
           </ul>
         )}
-        <p className="tiny muted">샘플 일정이에요. 실제 일정은 청약홈 분양정보 API를 연결하면 자동으로 채워져요.</p>
+        {list.length > limit && (
+          <button className="more-btn" onClick={() => setLimit(limit + 12)}>{list.length - limit}건 더 보기</button>
+        )}
+        <p className="tiny muted">출처: 청약홈 분양정보(한국부동산원) · {DATA_FETCHED_AT} 수집 · 분양가는 주택형별 최고가 · 주변 시세 비교는 실제 단지 데이터가 들어오면 표시돼요.</p>
       </section>
 
       <section className="panel gajeom-panel">
