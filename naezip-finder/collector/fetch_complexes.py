@@ -20,9 +20,9 @@ from .common import RAW_DIR, ApiError, get_items
 from .regions import GYEONGGI
 
 BASE = "https://apis.data.go.kr/1613000"
-LIST_URL = f"{BASE}/AptListService3/getSigunguAptList3"
-BASIS_URL = f"{BASE}/AptBasisInfoServiceV4/getAphusBassInfoV4"
-DETAIL_URL = f"{BASE}/AptBasisInfoServiceV4/getAphusDtlInfoV4"
+LIST_URL = f"{BASE}/AptListService4/getSigunguAptList4"
+BASIS_URL = f"{BASE}/AptBasisInfoServiceV5/getAphusBassInfoV5"
+DETAIL_URL = f"{BASE}/AptBasisInfoServiceV5/getAphusDtlInfoV5"
 PAGE_SIZE = 1000
 
 

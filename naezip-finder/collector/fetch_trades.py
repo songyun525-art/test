@@ -1,4 +1,4 @@
-"""국토교통부 아파트 매매 실거래가 상세 자료를 경기도 전체에 대해 월별로 받는다.
+"""국토교통부 아파트 매매 실거래가 자료를 경기도 전체에 대해 월별로 받는다.
 
 사용법:
     python -m collector.fetch_trades --years 10          # 최근 10년치, 이미 받은 달은 건너뜀
@@ -14,7 +14,7 @@ from datetime import date
 from .common import RAW_DIR, get_items
 from .regions import GYEONGGI
 
-URL = "https://apis.data.go.kr/1613000/RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev"
+URL = "https://apis.data.go.kr/1613000/RTMSDataSvcAptTrade/getRTMSDataSvcAptTrade"
 PAGE_SIZE = 1000
 
 
