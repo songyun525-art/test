@@ -1,0 +1,1684 @@
+{
+ "fetchedAt": "2026-09-28",
+ "items": [
+  {
+   "id": "2026820011",
+   "name": "시흥하중지구 A-4블록 신혼희망타운(공공분양) 추가입주자모집",
+   "city": "시흥시",
+   "district": "하중동",
+   "address": "경기도 시흥시 하중동 일원 (시흥하중 공공주택지구 내 A-4블록)",
+   "type": "신혼희망타운",
+   "households": 61,
+   "sizes": [
+    {
+     "area": 55,
+     "price": 3.7
+    },
+    {
+     "area": 56,
+     "price": 3.9
+    }
+   ],
+   "announce": "2026-09-18",
+   "applyStart": "2026-09-28",
+   "applyEnd": "2026-09-29",
+   "winners": "2026-10-08",
+   "moveIn": "2028.7",
+   "regulated": false,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820011&pblancNo=2026820011",
+   "lat": 37.3988633185815,
+   "lng": 126.800701603603,
+   "competition": null,
+   "cutline": null
+  },
+  {
+   "id": "2026000453",
+   "name": "광명 시티프라디움 에듀하임",
+   "city": "광명시",
+   "district": "소하동",
+   "address": "경기도 광명시 소하동 광명 구름산지구 도시개발사업지구 A6BL",
+   "type": "민영",
+   "households": 426,
+   "sizes": [
+    {
+     "area": 59,
+     "price": 8.8
+    },
+    {
+     "area": 84,
+     "price": 12
+    }
+   ],
+   "announce": "2026-09-18",
+   "applyStart": "2026-09-29",
+   "applyEnd": "2026-10-02",
+   "winners": "2026-10-12",
+   "moveIn": "2029.3",
+   "regulated": true,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000453&pblancNo=2026000453",
+   "lat": 37.4209855252893,
+   "lng": 126.884148578803,
+   "competition": null,
+   "cutline": null
+  },
+  {
+   "id": "2026000449",
+   "name": "화서역 호수공원 아너스빌",
+   "city": "수원시",
+   "district": "권선구",
+   "address": "경기도 수원시 권선구 서둔동 212-1번지 일원",
+   "type": "민영",
+   "households": 476,
+   "sizes": [
+    {
+     "area": 84,
+     "price": 9
+    },
+    {
+     "area": 94,
+     "price": 9
+    },
+    {
+     "area": 99,
+     "price": 9.1
+    }
+   ],
+   "announce": "2026-09-11",
+   "applyStart": "2026-09-21",
+   "applyEnd": "2026-09-23",
+   "winners": "2026-10-01",
+   "moveIn": "2029.10",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000449&pblancNo=2026000449",
+   "lat": 37.2736553636999,
+   "lng": 126.982421121126,
+   "competition": 1.8,
+   "cutline": null
+  },
+  {
+   "id": "2026000438",
+   "name": "힐스테이트 고덕엘리스트 A65BL 공공분양주택",
+   "city": "평택시",
+   "district": "고덕동",
+   "address": "경기도 평택시 고덕동 고덕면 일원(평택고덕국제화계획지구 A65BL)",
+   "type": "공공분양",
+   "households": 837,
+   "sizes": [
+    {
+     "area": 84,
+     "price": 5.7
+    }
+   ],
+   "announce": "2026-09-11",
+   "applyStart": "2026-09-21",
+   "applyEnd": "2026-09-23",
+   "winners": "2026-10-02",
+   "moveIn": "2029.6",
+   "regulated": false,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000438&pblancNo=2026000438",
+   "lat": 37.0404391753187,
+   "lng": 127.050330180019,
+   "competition": 0.1,
+   "cutline": null
+  },
+  {
+   "id": "2026000437",
+   "name": "힐스테이트 고덕엘리스트 A12BL 공공분양주택",
+   "city": "평택시",
+   "district": "고덕동",
+   "address": "경기도 평택시 고덕동 고덕면 일원(평택고덕국제화계획지구 A12BL)",
+   "type": "공공분양",
+   "households": 942,
+   "sizes": [
+    {
+     "area": 84,
+     "price": 5.8
+    }
+   ],
+   "announce": "2026-09-11",
+   "applyStart": "2026-09-21",
+   "applyEnd": "2026-09-23",
+   "winners": "2026-10-01",
+   "moveIn": "2029.6",
+   "regulated": false,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000437&pblancNo=2026000437",
+   "lat": 37.0404391753187,
+   "lng": 127.050330180019,
+   "competition": 0.2,
+   "cutline": null
+  },
+  {
+   "id": "2026000103",
+   "name": "더샵 분당하이스트",
+   "city": "성남시",
+   "district": "분당구",
+   "address": "경기도 성남시 분당구 정자동 90번지",
+   "type": "민영",
+   "households": 143,
+   "sizes": [
+    {
+     "area": 66,
+     "price": 21.6
+    },
+    {
+     "area": 74,
+     "price": 24
+    },
+    {
+     "area": 84,
+     "price": 29.8
+    }
+   ],
+   "announce": "2026-09-11",
+   "applyStart": "2026-09-21",
+   "applyEnd": "2026-09-28",
+   "winners": "2026-10-02",
+   "moveIn": "2027.12",
+   "regulated": true,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000103&pblancNo=2026000103",
+   "lat": 37.3673455997437,
+   "lng": 127.113554103774,
+   "competition": 9.4,
+   "cutline": null
+  },
+  {
+   "id": "2026000314",
+   "name": "중동역 다채로움 더원",
+   "city": "부천시",
+   "district": "소사구",
+   "address": "경기도 부천시 소사구 송내동 365-1번지 일원",
+   "type": "민영",
+   "households": 39,
+   "sizes": [
+    {
+     "area": 54,
+     "price": 5.5
+    },
+    {
+     "area": 59,
+     "price": 6.1
+    },
+    {
+     "area": 60,
+     "price": 6.1
+    },
+    {
+     "area": 84,
+     "price": 8
+    }
+   ],
+   "announce": "2026-09-10",
+   "applyStart": "2026-09-21",
+   "applyEnd": "2026-09-23",
+   "winners": "2026-10-08",
+   "moveIn": "2028.8",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000314&pblancNo=2026000314",
+   "lat": 37.4844821346547,
+   "lng": 126.76199509258,
+   "competition": 4.5,
+   "cutline": null
+  },
+  {
+   "id": "2026000431",
+   "name": "오남역 서희스타힐스 여의재 3단지 (조합원 취소분)",
+   "city": "남양주시",
+   "district": "오남읍",
+   "address": "경기도 남양주시 오남읍 양지리 186-10번지 일원",
+   "type": "민영",
+   "households": 133,
+   "sizes": [
+    {
+     "area": 59,
+     "price": 5.3
+    },
+    {
+     "area": 75,
+     "price": 6.5
+    },
+    {
+     "area": 84,
+     "price": 7.1
+    }
+   ],
+   "announce": "2026-09-09",
+   "applyStart": "2026-09-21",
+   "applyEnd": "2026-09-23",
+   "winners": "2026-10-06",
+   "moveIn": "2029.1",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000431&pblancNo=2026000431",
+   "lat": 37.7037510819721,
+   "lng": 127.200056561006,
+   "competition": 2,
+   "cutline": null
+  },
+  {
+   "id": "2026000393",
+   "name": "시흥 은계 에피트(조합원 취소분)",
+   "city": "시흥시",
+   "district": "은행동",
+   "address": "경기도 시흥시 은행동 289-31번지 일원",
+   "type": "민영",
+   "households": 24,
+   "sizes": [
+    {
+     "area": 39,
+     "price": 3.1
+    },
+    {
+     "area": 48,
+     "price": 3.8
+    },
+    {
+     "area": 52,
+     "price": 4.3
+    },
+    {
+     "area": 59,
+     "price": 4.9
+    }
+   ],
+   "announce": "2026-09-04",
+   "applyStart": "2026-09-15",
+   "applyEnd": "2026-09-17",
+   "winners": "2026-09-23",
+   "moveIn": "2026.10",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000393&pblancNo=2026000393",
+   "lat": 37.4307932437252,
+   "lng": 126.795178777837,
+   "competition": 0.5,
+   "cutline": null
+  },
+  {
+   "id": "2026000394",
+   "name": "더샵 여주역더퍼스트",
+   "city": "여주시",
+   "district": "홍문동",
+   "address": "경기도 여주시 홍문동 332-2번지 일원",
+   "type": "민영",
+   "households": 696,
+   "sizes": [
+    {
+     "area": 84,
+     "price": 5.2
+    }
+   ],
+   "announce": "2026-09-03",
+   "applyStart": "2026-09-14",
+   "applyEnd": "2026-09-16",
+   "winners": "2026-09-22",
+   "moveIn": "2029.8",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000394&pblancNo=2026000394",
+   "lat": 37.285189868542,
+   "lng": 127.64169599122,
+   "competition": 0.1,
+   "cutline": null
+  },
+  {
+   "id": "2026820009",
+   "name": "남양주진접2지구 A-4블록 신혼희망타운(공공분양) 잔여세대 추가입주자모집공고",
+   "city": "남양주시",
+   "district": "진접읍",
+   "address": "경기도 남양주시 진접읍 내각리, 연평리 일원 남양주진접2 공공주택지구 A-4블록",
+   "type": "신혼희망타운",
+   "households": 5,
+   "sizes": [
+    {
+     "area": 55,
+     "price": 3.8
+    }
+   ],
+   "announce": "2026-08-31",
+   "applyStart": "2026-09-08",
+   "applyEnd": "2026-09-09",
+   "winners": "2026-09-16",
+   "moveIn": "2028.4",
+   "regulated": false,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820009&pblancNo=2026820009",
+   "lat": 37.7263004861765,
+   "lng": 127.189886481276,
+   "competition": null,
+   "cutline": null
+  },
+  {
+   "id": "2026000416",
+   "name": "양주회천지구 A-26블록 공공분양주택",
+   "city": "양주시",
+   "district": "덕정동",
+   "address": "경기도 양주시 덕정동 일원 양주신도시 택지개발지구 내 A-26블록",
+   "type": "공공분양",
+   "households": 792,
+   "sizes": [
+    {
+     "area": 59,
+     "price": 3.6
+    },
+    {
+     "area": 74,
+     "price": 4.4
+    },
+    {
+     "area": 84,
+     "price": 4.9
+    }
+   ],
+   "announce": "2026-08-27",
+   "applyStart": "2026-09-14",
+   "applyEnd": "2026-09-17",
+   "winners": "2026-10-07",
+   "moveIn": "2029.10",
+   "regulated": false,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000416&pblancNo=2026000416",
+   "lat": 37.8467321091632,
+   "lng": 127.064716277101,
+   "competition": null,
+   "cutline": null
+  },
+  {
+   "id": "2026000409",
+   "name": "의정부우정 A2블록 공공분양주택(본청약)",
+   "city": "의정부시",
+   "district": "녹양동",
+   "address": "경기도 의정부시 녹양동 일원 의정부우정 공공주택지구 내 A-2블록",
+   "type": "공공분양",
+   "households": 463,
+   "sizes": [
+    {
+     "area": 59,
+     "price": 4.1
+    }
+   ],
+   "announce": "2026-08-26",
+   "applyStart": "2026-09-07",
+   "applyEnd": "2026-09-17",
+   "winners": "2026-10-08",
+   "moveIn": "2029.5",
+   "regulated": false,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000409&pblancNo=2026000409",
+   "lat": 37.7601308014542,
+   "lng": 127.03232037874,
+   "competition": null,
+   "cutline": null
+  },
+  {
+   "id": "2026000354",
+   "name": "상동역 롯데캐슬 시그니처",
+   "city": "부천시",
+   "district": "원미구",
+   "address": "경기도 부천시 원미구 상동 540-1번지",
+   "type": "민영",
+   "households": 1859,
+   "sizes": [
+    {
+     "area": 84,
+     "price": 16.4
+    },
+    {
+     "area": 113,
+     "price": 22.5
+    },
+    {
+     "area": 121,
+     "price": 23.5
+    },
+    {
+     "area": 153,
+     "price": 47.5
+    },
+    {
+     "area": 187,
+     "price": 57.3
+    },
+    {
+     "area": 192,
+     "price": 60.4
+    }
+   ],
+   "announce": "2026-08-14",
+   "applyStart": "2026-08-24",
+   "applyEnd": "2026-08-26",
+   "winners": "2026-09-01",
+   "moveIn": "2032.3",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000354&pblancNo=2026000354",
+   "lat": 37.5040754891302,
+   "lng": 126.754949486615,
+   "competition": 2.2,
+   "cutline": 36
+  },
+  {
+   "id": "2026000377",
+   "name": "의왕역 한신더휴",
+   "city": "의왕시",
+   "district": "삼동",
+   "address": "경기도 의왕시 삼동 244-1번지 일원",
+   "type": "민영",
+   "households": 108,
+   "sizes": [
+    {
+     "area": 49,
+     "price": 5.6
+    },
+    {
+     "area": 59,
+     "price": 7.3
+    },
+    {
+     "area": 74,
+     "price": 8.6
+    },
+    {
+     "area": 84,
+     "price": 9.4
+    }
+   ],
+   "announce": "2026-08-13",
+   "applyStart": "2026-08-24",
+   "applyEnd": "2026-08-27",
+   "winners": "2026-09-02",
+   "moveIn": "2029.6",
+   "regulated": true,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000377&pblancNo=2026000377",
+   "lat": 37.32088060963,
+   "lng": 126.955830705015,
+   "competition": 4.3,
+   "cutline": null
+  },
+  {
+   "id": "2026000365",
+   "name": "오남역 서희스타힐스 여의재 1단지",
+   "city": "남양주시",
+   "district": "오남읍",
+   "address": "경기도 남양주시 오남읍 양지리 101번지 일원",
+   "type": "민영",
+   "households": 180,
+   "sizes": [
+    {
+     "area": 59,
+     "price": 5.5
+    },
+    {
+     "area": 75,
+     "price": 6.6
+    },
+    {
+     "area": 84,
+     "price": 7.2
+    }
+   ],
+   "announce": "2026-08-13",
+   "applyStart": "2026-08-24",
+   "applyEnd": "2026-08-26",
+   "winners": "2026-09-01",
+   "moveIn": "2030.8",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000365&pblancNo=2026000365",
+   "lat": 37.6999782584754,
+   "lng": 127.203685301731,
+   "competition": 1.3,
+   "cutline": null
+  },
+  {
+   "id": "2026000382",
+   "name": "두산위브더제니스 부천",
+   "city": "부천시",
+   "district": "소사구",
+   "address": "경기도 부천시 소사구 소사본동 88-39번지 일대",
+   "type": "민영",
+   "households": 1158,
+   "sizes": [
+    {
+     "area": 59,
+     "price": 8.8
+    },
+    {
+     "area": 74,
+     "price": 10.6
+    },
+    {
+     "area": 84,
+     "price": 11.8
+    }
+   ],
+   "announce": "2026-08-12",
+   "applyStart": "2026-08-19",
+   "applyEnd": "2026-08-21",
+   "winners": "2026-08-28",
+   "moveIn": "2032.2",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000382&pblancNo=2026000382",
+   "lat": 37.4820165033133,
+   "lng": 126.789515376901,
+   "competition": 0.4,
+   "cutline": null
+  },
+  {
+   "id": "2026820008",
+   "name": "성남복정2 A1블록 신혼희망타운(공공분양)(본청약)",
+   "city": "성남시",
+   "district": "수정구",
+   "address": "경기도 성남시 수정구 신흥동 81-8",
+   "type": "신혼희망타운",
+   "households": 594,
+   "sizes": [
+    {
+     "area": 55,
+     "price": 8
+    },
+    {
+     "area": 56,
+     "price": 8.1
+    }
+   ],
+   "announce": "2026-08-10",
+   "applyStart": "2026-08-31",
+   "applyEnd": "2026-09-08",
+   "winners": "2026-09-17",
+   "moveIn": "2030.5",
+   "regulated": true,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820008&pblancNo=2026820008",
+   "lat": 37.4521371368257,
+   "lng": 127.143821200261,
+   "competition": null,
+   "cutline": null
+  },
+  {
+   "id": "2026820006",
+   "name": "시흥거모 A-5블록 신혼희망타운(공공분양)(본청약)",
+   "city": "시흥시",
+   "district": "거모동,",
+   "address": "경기도 시흥시 거모동, 군자동 일원 시흥거모 공공주택지구 내 A-5블록",
+   "type": "신혼희망타운",
+   "households": 290,
+   "sizes": [
+    {
+     "area": 55,
+     "price": 4.5
+    }
+   ],
+   "announce": "2026-08-07",
+   "applyStart": "2026-08-18",
+   "applyEnd": "2026-08-26",
+   "winners": "2026-09-02",
+   "moveIn": "2029.11",
+   "regulated": false,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820006&pblancNo=2026820006",
+   "lat": 37.348965107520016,
+   "lng": 126.77580857638985,
+   "competition": null,
+   "cutline": null
+  },
+  {
+   "id": "2026000371",
+   "name": "용인반도체클러스터 동일하이빌 파크밸리(D1-1블록)",
+   "city": "용인시",
+   "district": "처인구",
+   "address": "경기도 용인시 처인구 원삼면 용인 반도체 클러스터 일반산업단지 D1-1BL",
+   "type": "민영",
+   "households": 589,
+   "sizes": [
+    {
+     "area": 59,
+     "price": 4.2
+    },
+    {
+     "area": 71,
+     "price": 4.8
+    },
+    {
+     "area": 84,
+     "price": 5.3
+    }
+   ],
+   "announce": "2026-08-07",
+   "applyStart": "2026-08-18",
+   "applyEnd": "2026-08-21",
+   "winners": "2026-08-27",
+   "moveIn": "2029.1",
+   "regulated": false,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000371&pblancNo=2026000371",
+   "lat": 37.1630568526734,
+   "lng": 127.312512665774,
+   "competition": 8,
+   "cutline": 38
+  },
+  {
+   "id": "2026000367",
+   "name": "한강 푸르지오 리버프론트",
+   "city": "김포시",
+   "district": "고촌읍",
+   "address": "경기도 김포시 고촌읍 향산리 588-45번지 일원",
+   "type": "민영",
+   "households": 2432,
+   "sizes": [
+    {
+     "area": 84,
+     "price": 7.7
+    },
+    {
+     "area": 106,
+     "price": 9.5
+    },
+    {
+     "area": 122,
+     "price": 11.9
+    },
+    {
+     "area": 180,
+     "price": 30
+    }
+   ],
+   "announce": "2026-07-30",
+   "applyStart": "2026-08-10",
+   "applyEnd": "2026-08-12",
+   "winners": "2026-08-20",
+   "moveIn": "2031.1",
+   "regulated": false,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000367&pblancNo=2026000367",
+   "lat": 37.6287936713765,
+   "lng": 126.73943425357,
+   "competition": 0.8,
+   "cutline": null
+  },
+  {
+   "id": "2026820007",
+   "name": "수원당수지구 A5블록 신혼희망타운(공공분양) 추가 입주자모집",
+   "city": "수원시",
+   "district": "권선구",
+   "address": "경기도 수원시 권선구 금곡동, 당수동 일원 수원당수 공공주택지구내 A5블록",
+   "type": "신혼희망타운",
+   "households": 142,
+   "sizes": [
+    {
+     "area": 46,
+     "price": 3.5
+    },
+    {
+     "area": 55,
+     "price": 4.1
+    }
+   ],
+   "announce": "2026-07-23",
+   "applyStart": "2026-08-03",
+   "applyEnd": "2026-08-04",
+   "winners": "2026-08-13",
+   "moveIn": "2027.6",
+   "regulated": false,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820007&pblancNo=2026820007",
+   "lat": 37.2576307301331,
+   "lng": 126.971872538584,
+   "competition": null,
+   "cutline": null
+  },
+  {
+   "id": "2026000327",
+   "name": "역북 서희스타힐스 프라임시티(조합원 취소분)",
+   "city": "용인시",
+   "district": "처인구",
+   "address": "경기도 용인시 처인구 역북동 89-25번지 일원",
+   "type": "민영",
+   "households": 5,
+   "sizes": [
+    {
+     "area": 59,
+     "price": 4.6
+    },
+    {
+     "area": 74,
+     "price": 5.9
+    },
+    {
+     "area": 84,
+     "price": 6.6
+    }
+   ],
+   "announce": "2026-07-16",
+   "applyStart": "2026-07-27",
+   "applyEnd": "2026-07-28",
+   "winners": "2026-08-03",
+   "moveIn": "2027.3",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000327&pblancNo=2026000327",
+   "lat": 37.2491245268754,
+   "lng": 127.194177381671,
+   "competition": 7,
+   "cutline": 21
+  },
+  {
+   "id": "2026000291",
+   "name": "이천 휴먼빌 클래스원",
+   "city": "이천시",
+   "district": "갈산동",
+   "address": "경기도 이천시 갈산동 572-1번지 일원",
+   "type": "민영",
+   "households": 536,
+   "sizes": [
+    {
+     "area": 84,
+     "price": 5.7
+    }
+   ],
+   "announce": "2026-07-16",
+   "applyStart": "2026-07-27",
+   "applyEnd": "2026-07-29",
+   "winners": "2026-08-04",
+   "moveIn": "2029.9",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000291&pblancNo=2026000291",
+   "lat": 37.2867994438242,
+   "lng": 127.461821345051,
+   "competition": 0,
+   "cutline": null
+  },
+  {
+   "id": "2026000316",
+   "name": "오산헤리티지자이 2단지",
+   "city": "오산시",
+   "district": "양산동",
+   "address": "경기도 오산시 양산동 328-2번지 일원",
+   "type": "민영",
+   "households": 714,
+   "sizes": [
+    {
+     "area": 75,
+     "price": 7.3
+    },
+    {
+     "area": 84,
+     "price": 7.9
+    },
+    {
+     "area": 102,
+     "price": 9.1
+    },
+    {
+     "area": 124,
+     "price": 10.6
+    },
+    {
+     "area": 166,
+     "price": 20.8
+    }
+   ],
+   "announce": "2026-07-10",
+   "applyStart": "2026-07-20",
+   "applyEnd": "2026-07-22",
+   "winners": "2026-07-28",
+   "moveIn": "2029.9",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000316&pblancNo=2026000316",
+   "lat": 37.1973298178581,
+   "lng": 127.027771219188,
+   "competition": 0.1,
+   "cutline": null
+  },
+  {
+   "id": "2026000315",
+   "name": "오산헤리티지자이 1단지",
+   "city": "오산시",
+   "district": "양산동",
+   "address": "경기도 오산시 양산동 223번지 일원",
+   "type": "민영",
+   "households": 1069,
+   "sizes": [
+    {
+     "area": 75,
+     "price": 7.3
+    },
+    {
+     "area": 84,
+     "price": 7.9
+    },
+    {
+     "area": 102,
+     "price": 9.1
+    },
+    {
+     "area": 124,
+     "price": 10.6
+    },
+    {
+     "area": 166,
+     "price": 20.8
+    }
+   ],
+   "announce": "2026-07-10",
+   "applyStart": "2026-07-20",
+   "applyEnd": "2026-07-22",
+   "winners": "2026-07-28",
+   "moveIn": "2029.9",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000315&pblancNo=2026000315",
+   "lat": 37.1992878236862,
+   "lng": 127.028821398341,
+   "competition": 0.9,
+   "cutline": null
+  },
+  {
+   "id": "2026000301",
+   "name": "의왕역 SK VIEW",
+   "city": "의왕시",
+   "district": "삼동",
+   "address": "경기도 의왕시 삼동 192-244번지 일원",
+   "type": "민영",
+   "households": 820,
+   "sizes": [
+    {
+     "area": 36,
+     "price": 4
+    },
+    {
+     "area": 45,
+     "price": 5.7
+    },
+    {
+     "area": 59,
+     "price": 9
+    },
+    {
+     "area": 84,
+     "price": 11
+    }
+   ],
+   "announce": "2026-07-10",
+   "applyStart": "2026-07-20",
+   "applyEnd": "2026-07-23",
+   "winners": "2026-07-29",
+   "moveIn": "2029.12",
+   "regulated": true,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000301&pblancNo=2026000301",
+   "lat": 37.321755439176,
+   "lng": 126.951500198356,
+   "competition": 10.2,
+   "cutline": null
+  },
+  {
+   "id": "2026000336",
+   "name": "평택역 더센트럴45",
+   "city": "평택시",
+   "district": "평택동",
+   "address": "경기도 평택시 평택동 45-1",
+   "type": "민영",
+   "households": 99,
+   "sizes": [
+    {
+     "area": 79,
+     "price": 5.5
+    },
+    {
+     "area": 84,
+     "price": 7
+    },
+    {
+     "area": 110,
+     "price": 8.9
+    },
+    {
+     "area": 125,
+     "price": 9.2
+    },
+    {
+     "area": 152,
+     "price": 11.7
+    }
+   ],
+   "announce": "2026-07-09",
+   "applyStart": "2026-07-20",
+   "applyEnd": "2026-07-22",
+   "winners": "2026-07-29",
+   "moveIn": "2026.8",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000336&pblancNo=2026000336",
+   "lat": 36.9927895065046,
+   "lng": 127.087237390775,
+   "competition": 0.4,
+   "cutline": null
+  },
+  {
+   "id": "2026000329",
+   "name": "호반써밋 풍무Ⅲ",
+   "city": "김포시",
+   "district": "풍무역세권",
+   "address": "김포 풍무역세권 B4블록 (경기도 김포시 사우동 458번지 일원)",
+   "type": "민영",
+   "households": 660,
+   "sizes": [
+    {
+     "area": 59,
+     "price": 6
+    },
+    {
+     "area": 84,
+     "price": 7.6
+    }
+   ],
+   "announce": "2026-07-09",
+   "applyStart": "2026-07-20",
+   "applyEnd": "2026-07-22",
+   "winners": "2026-07-28",
+   "moveIn": "2029.5",
+   "regulated": false,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000329&pblancNo=2026000329",
+   "lat": null,
+   "lng": null,
+   "competition": 12,
+   "cutline": 37
+  },
+  {
+   "id": "2026000310",
+   "name": "남양주 진접 서한이다음(S1BL)",
+   "city": "남양주시",
+   "district": "진접2",
+   "address": "경기도 남양주시 진접2 공공주택지구 S1BL",
+   "type": "민영",
+   "households": 361,
+   "sizes": [
+    {
+     "area": 72,
+     "price": 5.9
+    },
+    {
+     "area": 84,
+     "price": 6.7
+    },
+    {
+     "area": 95,
+     "price": 7.1
+    }
+   ],
+   "announce": "2026-07-09",
+   "applyStart": "2026-07-20",
+   "applyEnd": "2026-07-22",
+   "winners": "2026-07-29",
+   "moveIn": "2029.1",
+   "regulated": false,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000310&pblancNo=2026000310",
+   "lat": 37.714197847872,
+   "lng": 127.232069826053,
+   "competition": 4.8,
+   "cutline": 46
+  },
+  {
+   "id": "2026000290",
+   "name": "야목역 서희스타힐스 그랜드힐(조합원 취소분)",
+   "city": "화성시",
+   "district": "효행구",
+   "address": "경기도 화성시 효행구 비봉면 구포리 614-18번지 일원",
+   "type": "민영",
+   "households": 83,
+   "sizes": [
+    {
+     "area": 59,
+     "price": 4.2
+    },
+    {
+     "area": 84,
+     "price": 5.8
+    }
+   ],
+   "announce": "2026-07-02",
+   "applyStart": "2026-07-13",
+   "applyEnd": "2026-07-15",
+   "winners": "2026-07-22",
+   "moveIn": "2029.10",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000290&pblancNo=2026000290",
+   "lat": 37.2503298374662,
+   "lng": 126.877857668136,
+   "competition": 0.2,
+   "cutline": null
+  },
+  {
+   "id": "2026000320",
+   "name": "고양창릉 S-4블록 공공분양주택(본청약)",
+   "city": "고양시",
+   "district": "덕양구",
+   "address": "경기도 고양시 덕양구 도내동 외 8개동 일원 고양창릉 공공주택지구 내 S-4블록",
+   "type": "공공분양",
+   "households": 1024,
+   "sizes": [
+    {
+     "area": 59,
+     "price": 6.3
+    },
+    {
+     "area": 74,
+     "price": 7.7
+    },
+    {
+     "area": 84,
+     "price": 8.7
+    }
+   ],
+   "announce": "2026-06-30",
+   "applyStart": "2026-07-20",
+   "applyEnd": "2026-07-29",
+   "winners": "2026-08-19",
+   "moveIn": "2030.3",
+   "regulated": false,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000320&pblancNo=2026000320",
+   "lat": 37.6251535449339,
+   "lng": 126.862375162762,
+   "competition": null,
+   "cutline": null
+  },
+  {
+   "id": "2026000313",
+   "name": "고양창릉지구 S-3블록 이익공유형 분양주택(본청약)",
+   "city": "고양시",
+   "district": "덕양구",
+   "address": "경기도 고양시 덕양구 도내동 외 8개 동 일원 고양창릉 공공주택지구 내 S-3블록",
+   "type": "공공분양",
+   "households": 1282,
+   "sizes": [
+    {
+     "area": 46,
+     "price": 3.9
+    },
+    {
+     "area": 55,
+     "price": 4.7
+    },
+    {
+     "area": 59,
+     "price": 5
+    },
+    {
+     "area": 74,
+     "price": 6.2
+    },
+    {
+     "area": 84,
+     "price": 7.1
+    }
+   ],
+   "announce": "2026-06-30",
+   "applyStart": "2026-07-20",
+   "applyEnd": "2026-07-29",
+   "winners": "2026-08-18",
+   "moveIn": "2030.2",
+   "regulated": false,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000313&pblancNo=2026000313",
+   "lat": 37.6251535449339,
+   "lng": 126.862375162762,
+   "competition": null,
+   "cutline": null
+  },
+  {
+   "id": "2026820005",
+   "name": "역곡지구 하우스토리(부천역곡지구 A-2BL) 신혼희망타운(공공분양)(본청약)",
+   "city": "부천시",
+   "district": "부천역곡",
+   "address": "경기도 부천시 부천역곡 공공주택지구 내 A-2블록",
+   "type": "신혼희망타운",
+   "households": 976,
+   "sizes": [
+    {
+     "area": 55,
+     "price": 5.1
+    }
+   ],
+   "announce": "2026-06-26",
+   "applyStart": "2026-07-13",
+   "applyEnd": "2026-07-23",
+   "winners": "2026-08-04",
+   "moveIn": "2029.6",
+   "regulated": false,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820005&pblancNo=2026820005",
+   "lat": 37.489286049949,
+   "lng": 126.816680853404,
+   "competition": null,
+   "cutline": null
+  },
+  {
+   "id": "2026000281",
+   "name": "이천 서희스타힐스 SKY(조합원 취소분)",
+   "city": "이천시",
+   "district": "안흥동",
+   "address": "경기도 이천시 안흥동 279-1번지 일원",
+   "type": "민영",
+   "households": 8,
+   "sizes": [
+    {
+     "area": 84,
+     "price": 6.5
+    }
+   ],
+   "announce": "2026-06-22",
+   "applyStart": "2026-07-02",
+   "applyEnd": "2026-07-03",
+   "winners": "2026-07-09",
+   "moveIn": "2029.1",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000281&pblancNo=2026000281",
+   "lat": 37.2763461719974,
+   "lng": 127.455741304077,
+   "competition": 2.7,
+   "cutline": null
+  },
+  {
+   "id": "2026000278",
+   "name": "양주 회천지구 A-8BL 로제비앙 엘가",
+   "city": "양주시",
+   "district": "회정동",
+   "address": "경기도 양주시 회정동 양주신도시 회천지구 A8블록",
+   "type": "민영",
+   "households": 361,
+   "sizes": [
+    {
+     "area": 84,
+     "price": 5.3
+    }
+   ],
+   "announce": "2026-06-22",
+   "applyStart": "2026-07-02",
+   "applyEnd": "2026-07-06",
+   "winners": "2026-07-10",
+   "moveIn": "2029.6",
+   "regulated": false,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000278&pblancNo=2026000278",
+   "lat": 37.83084848962532,
+   "lng": 127.05549457780806,
+   "competition": 0,
+   "cutline": null
+  },
+  {
+   "id": "2026000248",
+   "name": "북오산자이 드포레",
+   "city": "오산시",
+   "district": "내삼미동",
+   "address": "경기도 오산시 내삼미동 288번지 일원",
+   "type": "민영",
+   "households": 1517,
+   "sizes": [
+    {
+     "area": 59,
+     "price": 5.2
+    },
+    {
+     "area": 74,
+     "price": 6.2
+    },
+    {
+     "area": 84,
+     "price": 6.8
+    },
+    {
+     "area": 99,
+     "price": 7.7
+    },
+    {
+     "area": 124,
+     "price": 14.9
+    },
+    {
+     "area": 125,
+     "price": 14.9
+    }
+   ],
+   "announce": "2026-06-12",
+   "applyStart": "2026-06-22",
+   "applyEnd": "2026-06-24",
+   "winners": "2026-06-30",
+   "moveIn": "2029.10",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000248&pblancNo=2026000248",
+   "lat": 37.1810318184509,
+   "lng": 127.068580582045,
+   "competition": 0.1,
+   "cutline": null
+  },
+  {
+   "id": "2026000258",
+   "name": "고덕국제신도시 수자인하우스디",
+   "city": "평택시",
+   "district": "고덕국제화계획지구",
+   "address": "경기도 평택시 고덕국제화계획지구 A-67블록",
+   "type": "민영",
+   "households": 403,
+   "sizes": [
+    {
+     "area": 84,
+     "price": 5.7
+    },
+    {
+     "area": 101,
+     "price": 6.7
+    }
+   ],
+   "announce": "2026-06-11",
+   "applyStart": "2026-06-22",
+   "applyEnd": "2026-06-24",
+   "winners": "2026-06-30",
+   "moveIn": "2029.2",
+   "regulated": false,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000258&pblancNo=2026000258",
+   "lat": 37.0468096385402,
+   "lng": 127.025345931405,
+   "competition": 0.4,
+   "cutline": null
+  },
+  {
+   "id": "2026000237",
+   "name": "평택 고덕 우미 린 프레스티지(Abc-36BL)",
+   "city": "평택시",
+   "district": "고덕",
+   "address": "경기도 평택시 고덕 국제화계획지구 내 Abc-36블록",
+   "type": "민영",
+   "households": 743,
+   "sizes": [
+    {
+     "area": 84,
+     "price": 5.9
+    },
+    {
+     "area": 94,
+     "price": 6
+    },
+    {
+     "area": 101,
+     "price": 6.8
+    },
+    {
+     "area": 111,
+     "price": 6.9
+    }
+   ],
+   "announce": "2026-06-05",
+   "applyStart": "2026-06-15",
+   "applyEnd": "2026-06-17",
+   "winners": "2026-06-23",
+   "moveIn": "2028.12",
+   "regulated": false,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000237&pblancNo=2026000237",
+   "lat": 37.04895282255538,
+   "lng": 127.02747357220208,
+   "competition": 1.9,
+   "cutline": 38
+  },
+  {
+   "id": "2026820004",
+   "name": "e편한세상 분당 퍼스트빌리지(성남낙생지구 A-1BL) 신혼희망타운(공공분양)(본청약)",
+   "city": "성남시",
+   "district": "성남낙생지구",
+   "address": "경기도 성남시 성남낙생지구 내 A-1블록",
+   "type": "신혼희망타운",
+   "households": 933,
+   "sizes": [
+    {
+     "area": 51,
+     "price": 5.9
+    },
+    {
+     "area": 55,
+     "price": 6.4
+    },
+    {
+     "area": 59,
+     "price": 6.8
+    }
+   ],
+   "announce": "2026-05-29",
+   "applyStart": "2026-07-13",
+   "applyEnd": "2026-07-21",
+   "winners": "2026-07-31",
+   "moveIn": "2029.2",
+   "regulated": true,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026820004&pblancNo=2026820004",
+   "lat": null,
+   "lng": null,
+   "competition": null,
+   "cutline": null
+  },
+  {
+   "id": "2026000230",
+   "name": "화성동탄2지구 C-27블록 공공분양주택",
+   "city": "화성시",
+   "district": "동탄구",
+   "address": "경기도 화성시 동탄구 일원 화성동탄2 택지개발사업지구 내 C-27블록",
+   "type": "공공분양",
+   "households": 473,
+   "sizes": [
+    {
+     "area": 84,
+     "price": 6.2
+    }
+   ],
+   "announce": "2026-05-29",
+   "applyStart": "2026-06-09",
+   "applyEnd": "2026-06-12",
+   "winners": "2026-06-25",
+   "moveIn": "2029.6",
+   "regulated": false,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000230&pblancNo=2026000230",
+   "lat": 37.1972782191744,
+   "lng": 127.097007031605,
+   "competition": null,
+   "cutline": null
+  },
+  {
+   "id": "2026000219",
+   "name": "호반써밋 풍무Ⅱ",
+   "city": "김포시",
+   "district": "풍무역세권",
+   "address": "김포 풍무역세권 C5블록 (경기도 김포시 사우동 527-1 일원)",
+   "type": "민영",
+   "households": 961,
+   "sizes": [
+    {
+     "area": 59,
+     "price": 5.8
+    },
+    {
+     "area": 84,
+     "price": 7.5
+    },
+    {
+     "area": 113,
+     "price": 8.9
+    },
+    {
+     "area": 182,
+     "price": 17.9
+    }
+   ],
+   "announce": "2026-05-22",
+   "applyStart": "2026-06-01",
+   "applyEnd": "2026-06-04",
+   "winners": "2026-06-10",
+   "moveIn": "2030.1",
+   "regulated": false,
+   "priceCap": true,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000219&pblancNo=2026000219",
+   "lat": null,
+   "lng": null,
+   "competition": 10.7,
+   "cutline": 40
+  },
+  {
+   "id": "2026000205",
+   "name": "수원역 아너스빌 타임원",
+   "city": "수원시",
+   "district": "권선구",
+   "address": "경기도 수원시 권선구 평동 135-1번지 일원",
+   "type": "민영",
+   "households": 114,
+   "sizes": [
+    {
+     "area": 84,
+     "price": 7.9
+    }
+   ],
+   "announce": "2026-05-22",
+   "applyStart": "2026-06-01",
+   "applyEnd": "2026-06-04",
+   "winners": "2026-06-10",
+   "moveIn": "2028.11",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000205&pblancNo=2026000205",
+   "lat": 37.2619192434894,
+   "lng": 126.998709774564,
+   "competition": 5.6,
+   "cutline": 35
+  },
+  {
+   "id": "2026000122",
+   "name": "오정 해모로 스마트시티(조합원 취소분)",
+   "city": "부천시",
+   "district": "오정구",
+   "address": "경기도 부천시 오정구 오정동 613번지 일원",
+   "type": "민영",
+   "households": 48,
+   "sizes": [
+    {
+     "area": 42,
+     "price": 3.9
+    },
+    {
+     "area": 59,
+     "price": 5.7
+    },
+    {
+     "area": 71,
+     "price": 6.7
+    }
+   ],
+   "announce": "2026-05-19",
+   "applyStart": "2026-05-29",
+   "applyEnd": "2026-06-02",
+   "winners": "2026-06-09",
+   "moveIn": "2027.7",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000122&pblancNo=2026000122",
+   "lat": 37.5236660579412,
+   "lng": 126.787557989431,
+   "competition": 1.3,
+   "cutline": null
+  },
+  {
+   "id": "2026000138",
+   "name": "힐스테이트 시흥더클래스",
+   "city": "시흥시",
+   "district": "대야동",
+   "address": "경기도 시흥시 대야동 140-5번지 일원",
+   "type": "민영",
+   "households": 430,
+   "sizes": [
+    {
+     "area": 74,
+     "price": 7.7
+    },
+    {
+     "area": 84,
+     "price": 8.8
+    }
+   ],
+   "announce": "2026-05-15",
+   "applyStart": "2026-05-27",
+   "applyEnd": "2026-05-29",
+   "winners": "2026-06-08",
+   "moveIn": "2029.3",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000138&pblancNo=2026000138",
+   "lat": 37.4519867431034,
+   "lng": 126.789964371893,
+   "competition": 0.2,
+   "cutline": null
+  },
+  {
+   "id": "2026000187",
+   "name": "엘리프 역곡",
+   "city": "부천시",
+   "district": "소사구",
+   "address": "경기도 부천시 소사구 괴안동 106-1번지 일원",
+   "type": "민영",
+   "households": 44,
+   "sizes": [
+    {
+     "area": 46,
+     "price": 5.2
+    },
+    {
+     "area": 59,
+     "price": 6.7
+    },
+    {
+     "area": 74,
+     "price": 8.6
+    }
+   ],
+   "announce": "2026-05-14",
+   "applyStart": "2026-05-26",
+   "applyEnd": "2026-05-28",
+   "winners": "2026-06-04",
+   "moveIn": "2027.8",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000187&pblancNo=2026000187",
+   "lat": 37.4811330348047,
+   "lng": 126.811425572178,
+   "competition": 1.6,
+   "cutline": null
+  },
+  {
+   "id": "2025000422",
+   "name": "오남역 서희스타힐스 여의재 3단지",
+   "city": "남양주시",
+   "district": "오남읍",
+   "address": "경기도 남양주시 오남읍 양지리 186-10번지 일원",
+   "type": "민영",
+   "households": 117,
+   "sizes": [
+    {
+     "area": 59,
+     "price": 5.3
+    },
+    {
+     "area": 75,
+     "price": 6.5
+    },
+    {
+     "area": 84,
+     "price": 7.1
+    }
+   ],
+   "announce": "2026-05-13",
+   "applyStart": "2026-05-26",
+   "applyEnd": "2026-05-28",
+   "winners": "2026-06-05",
+   "moveIn": "2029.1",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2025000422&pblancNo=2025000422",
+   "lat": 37.7037510819721,
+   "lng": 127.200056561006,
+   "competition": 20,
+   "cutline": 57
+  },
+  {
+   "id": "2026000098",
+   "name": "식사 푸르지오 파크센트(조합원 취소분)",
+   "city": "고양시",
+   "district": "일산동구",
+   "address": "경기도 고양시 일산동구 식사동 1126번지 일대",
+   "type": "민영",
+   "households": 23,
+   "sizes": [
+    {
+     "area": 74,
+     "price": 7
+    },
+    {
+     "area": 84,
+     "price": 8
+    }
+   ],
+   "announce": "2026-05-11",
+   "applyStart": "2026-05-21",
+   "applyEnd": "2026-05-26",
+   "winners": "2026-06-01",
+   "moveIn": "2028.6",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000098&pblancNo=2026000098",
+   "lat": 37.672381212186,
+   "lng": 126.805844155438,
+   "competition": 7.5,
+   "cutline": 48
+  },
+  {
+   "id": "2026000178",
+   "name": "중앙하이츠 원종역",
+   "city": "부천시",
+   "district": "오정구",
+   "address": "경기도 부천시 오정구 원종동 276-2",
+   "type": "민영",
+   "households": 78,
+   "sizes": [
+    {
+     "area": 59,
+     "price": 4.8
+    },
+    {
+     "area": 60,
+     "price": 4.8
+    },
+    {
+     "area": 63,
+     "price": 5.1
+    },
+    {
+     "area": 66,
+     "price": 5.3
+    },
+    {
+     "area": 68,
+     "price": 5.5
+    },
+    {
+     "area": 69,
+     "price": 5.6
+    }
+   ],
+   "announce": "2026-05-08",
+   "applyStart": "2026-05-18",
+   "applyEnd": "2026-05-20",
+   "winners": "2026-05-27",
+   "moveIn": "2028.3",
+   "regulated": false,
+   "priceCap": false,
+   "url": "https://www.applyhome.co.kr/ai/aia/selectAPTLttotPblancDetail.do?houseManageNo=2026000178&pblancNo=2026000178",
+   "lat": 37.5244634827026,
+   "lng": 126.806617518766,
+   "competition": 7,
+   "cutline": null
+  }
+ ]
+}
