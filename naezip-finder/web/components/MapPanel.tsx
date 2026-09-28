@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import Icon from "./Icon";
 import SketchMap, { type MapPin } from "./SketchMap";
@@ -51,6 +52,7 @@ export default function MapPanel({
             {label}
           </label>
         ))}
+        <Link href="/map" className="link-btn right">크게 보기 ↗</Link>
       </div>
       {view === "map" ? (
         <SketchMap pins={pins} circles={show.hojae ? hojaeList : []} fit={slots.map((s) => s.complex)} label="비교 단지 위치 지도" />

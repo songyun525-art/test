@@ -333,6 +333,42 @@ a { color: inherit; text-decoration: none; }
 .stepper b { font-size: 16px; margin-right: 2px; }
 @media (max-width: 1200px) { .sub-grid { grid-template-columns: minmax(0, 1fr); } .gajeom-panel { position: static; order: -1; } }
 
+
+/* 전체 화면 가격 지도 */
+.pricemap { position: relative; height: 100vh; height: 100dvh; min-height: 480px; }
+.pricemap-canvas { position: absolute; inset: 0; background: #eef2ea; z-index: 0; }
+.pm-bar { position: absolute; top: 12px; left: 12px; right: 12px; z-index: 500; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; background: rgba(255,255,255,.96); border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; box-shadow: 0 6px 20px rgba(0,0,0,.08); }
+.pm-bar select { padding: 7px 8px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+.pm-back { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 8px; background: #f3f4f6; font-weight: 800; }
+.pm-title { font-size: 15px; font-weight: 800; }
+.pm-range { display: flex; align-items: center; gap: 8px; font-size: 12.5px; }
+.pm-range input { width: 140px; accent-color: var(--brand); }
+.pm-count { margin-left: auto; font-size: 12.5px; font-weight: 700; color: var(--ink-2); }
+.pm-legend { position: absolute; left: 12px; bottom: 16px; z-index: 500; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; background: rgba(255,255,255,.95); border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; font-size: 12px; }
+.pm-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: -1px; }
+.price-pin-wrap { background: none; border: 0; }
+.price-pin { transform: translate(-50%, calc(-100% - 6px)); display: inline-flex; flex-direction: column; align-items: center; background: #fff; border: 2px solid var(--pin); border-radius: 8px; padding: 2px 7px; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,.15); cursor: pointer; line-height: 1.2; font-family: inherit; }
+.price-pin::after { content: ""; position: absolute; left: 50%; bottom: -7px; transform: translateX(-50%); border: 6px solid transparent; border-top-color: var(--pin); border-bottom: 0; }
+.price-pin b { font-size: 13px; font-weight: 800; color: var(--ink); }
+.price-pin span { font-size: 10px; color: var(--ink-2); }
+.price-pin.on { background: var(--pin); }
+.price-pin.on b, .price-pin.on span { color: #fff; }
+.pm-card { position: absolute; top: 76px; right: 12px; z-index: 600; width: 300px; max-width: calc(100% - 24px); background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.14); display: flex; flex-direction: column; gap: 8px; }
+.pm-card h3 { font-size: 17px; font-weight: 800; padding-right: 24px; }
+.pm-close { position: absolute; top: 8px; right: 10px; border: 0; background: none; font-size: 22px; color: var(--muted); }
+.pm-sizes { display: flex; flex-direction: column; gap: 4px; }
+.pm-sizes div { display: grid; grid-template-columns: 1fr auto; gap: 0 8px; padding: 6px 8px; border-radius: 8px; background: #f8f9fb; font-size: 12.5px; }
+.pm-sizes div.on { background: var(--brand-soft); }
+.pm-sizes b { font-size: 16px; grid-row: span 2; align-self: center; }
+.pm-card .cta { margin-top: 4px; }
+@media (max-width: 860px) {
+  .pricemap { height: calc(100dvh - 64px); }
+  .pm-range input { width: 100px; }
+  .pm-count { margin-left: 0; }
+  .pm-legend { right: 60px; }
+  .pm-card { top: auto; bottom: 64px; left: 12px; right: 12px; width: auto; }
+}
+
 /* ---------- 반응형 ---------- */
 @media (max-width: 1200px) {
   .grid { grid-template-columns: minmax(0, 1fr); }

@@ -9,6 +9,7 @@ import BuildingArt from "./BuildingArt";
 const NAV = [
   { icon: "home", label: "아파트 비교", href: "/" },
   { icon: "wallet", label: "내 예산 구하기", href: "/budget" },
+  { icon: "pin", label: "지도에서 찾기", href: "/map" },
   { icon: "map", label: "예산에 맞는 집", href: "/find" },
   { icon: "calendar", label: "청약 정보", href: "/subscription" },
   { icon: "book", label: "공부 레퍼런스", href: "/study" },
