@@ -8,19 +8,29 @@ import DetailTable from "./DetailTable";
 import ScorePanel from "./ScorePanel";
 import { MetricsTable, PriceChart } from "./PriceChart";
 import { HojaePanel, Recommendations } from "./Bottom";
-import { complexes, type Complex } from "@/lib/data";
+import { complexes, type Complex, IS_SAMPLE, DATA_AS_OF } from "@/lib/data";
 import { DEFAULT_WEIGHTS, recommend, type Weights } from "@/lib/score";
 
 const byId = (id: string) => complexes.find((c) => c.id === id)!;
-const INITIAL: Slot[] = [
-  { complex: byId("dongtan-lotte"), area: 84 },
-  { complex: byId("gwanggyo-hoban"), area: 84 },
-  { complex: byId("suwon-hillstate"), area: 84 },
-];
+const size84 = (c: Complex) => c.sizes.find((z) => z.area >= 76 && z.area < 95);
+
+// 처음 보여 줄 비교 단지: 샘플이면 고정, 실제 데이터면 서로 다른 시에서 최근 3개월 84㎡ 거래가 가장 많은 단지 3곳
+function initialSlots(): Slot[] {
+  if (IS_SAMPLE) return ["dongtan-lotte", "gwanggyo-hoban", "suwon-hillstate"].map((id) => ({ complex: byId(id), area: 84 }));
+  const picked: Slot[] = [];
+  const ranked = complexes.filter((c) => size84(c)).sort((a, b) => size84(b)!.trades - size84(a)!.trades);
+  for (const c of ranked) {
+    if (picked.some((s) => s.complex.city === c.city)) continue;
+    picked.push({ complex: c, area: size84(c)!.area });
+    if (picked.length === 3) break;
+  }
+  return picked;
+}
+const INITIAL = initialSlots();
 
 export default function Dashboard() {
   const [slots, setSlots] = useState<Slot[]>(INITIAL);
-  const [liked, setLiked] = useState<Set<string>>(new Set(["dongtan-lotte"]));
+  const [liked, setLiked] = useState<Set<string>>(new Set(INITIAL.slice(0, 1).map((s) => s.complex.id)));
   const [region, setRegion] = useState("경기도 전체");
   const [weights, setWeights] = useState<Weights>(DEFAULT_WEIGHTS);
   const [notice, setNotice] = useState("");
@@ -98,7 +108,10 @@ export default function Dashboard() {
           <HojaePanel />
         </div>
         <footer className="foot muted tiny">
-          지금 보이는 숫자는 모두 화면 확인용 샘플입니다. 실거래 기준가는 국토교통부 실거래가 최근 3개월 평균이며, 호가를 직접 입력하면 그 값으로 추천을 다시 계산합니다.
+          {IS_SAMPLE
+            ? "지금 보이는 숫자는 모두 화면 확인용 샘플입니다. "
+            : `국토교통부 실거래가(${DATA_AS_OF} 기준)와 카카오 지도 정보로 계산했습니다. 강남역 이동 시간은 거리로 어림한 값입니다. `}
+          기준가는 최근 3개월 실거래 중위가(거래가 없으면 6·12개월)이며, 호가를 직접 입력하면 그 값으로 추천을 다시 계산합니다.
         </footer>
     </>
   );

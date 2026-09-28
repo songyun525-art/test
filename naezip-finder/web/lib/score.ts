@@ -1,4 +1,4 @@
-import { complexes, hojaeList, type Complex, type Hojae } from "./data";
+import { complexes, hojaeList, IS_SAMPLE, type Complex, type Hojae } from "./data";
 
 export type ScoreKey = "location" | "growth" | "households" | "age" | "hojae";
 
@@ -40,8 +40,9 @@ function percentile(values: number[], v: number) {
   return ((below + equal / 2) / values.length) * 100;
 }
 
+const fin = (v: number) => (Number.isFinite(v) ? v : 0);
 const growthIndex = (c: Complex) =>
-  c.growth.y1 * 0.2 + c.growth.y3 * 0.3 + c.growth.y5 * 0.3 + (c.growth.y10 / 2) * 0.2;
+  fin(c.growth.y1) * 0.2 + fin(c.growth.y3) * 0.3 + fin(c.growth.y5) * 0.3 + (fin(c.growth.y10) / 2) * 0.2;
 const allGrowth = complexes.map(growthIndex);
 
 const HOJAE_POINTS: Record<Hojae["category"], number> = { GTX: 25, "신규 노선": 15, "정비·개발": 10, 일자리: 10 };
@@ -55,21 +56,35 @@ export function subScores(c: Complex): Record<ScoreKey, number> {
   return {
     location: Math.round(clamp(station * 0.5 + commute * 0.5)),
     growth: Math.round(clamp(30 + percentile(allGrowth, growthIndex(c)) * 0.7)),
-    households: Math.round(clamp((100 * Math.log10(c.households / 50)) / Math.log10(3000 / 50))),
+    // 세대수 정보가 없는 단지는 중간값(50)으로 둡니다.
+    households: c.households ? Math.round(clamp((100 * Math.log10(c.households / 50)) / Math.log10(3000 / 50))) : 50,
     age: Math.round(clamp(100 - age * 3.5 + (age >= 30 ? 15 : 0))),
     hojae: Math.round(clamp(hojae)),
   };
 }
 
+const subCache = new Map<string, Record<ScoreKey, number>>();
+function cachedSub(c: Complex) {
+  let s = subCache.get(c.id);
+  if (!s) subCache.set(c.id, (s = subScores(c)));
+  return s;
+}
+
 export function totalScore(c: Complex, w: Weights = DEFAULT_WEIGHTS) {
-  const s = subScores(c);
+  const s = cachedSub(c);
   const sum = Object.values(w).reduce((a, b) => a + b, 0) || 1;
   return Math.round(SCORE_ITEMS.reduce((acc, { key }) => acc + s[key] * w[key], 0) / sum);
 }
 
-// 비교 대상(샘플 단지) 안에서 상위 몇 %인지
+// 경기도 단지 전체 안에서 상위 몇 %인지
+const totalsCache = new Map<string, number[]>();
 export function topPercent(c: Complex, w: Weights = DEFAULT_WEIGHTS) {
-  const totals = complexes.map((x) => totalScore(x, w));
+  const key = JSON.stringify(w);
+  let totals = totalsCache.get(key);
+  if (!totals) {
+    if (totalsCache.size > 20) totalsCache.clear();
+    totalsCache.set(key, (totals = complexes.map((x) => totalScore(x, w))));
+  }
   const mine = totalScore(c, w);
   const better = totals.filter((t) => t > mine).length;
   return Math.max(1, Math.round(((better + 1) / totals.length) * 100));
@@ -77,23 +92,30 @@ export function topPercent(c: Complex, w: Weights = DEFAULT_WEIGHTS) {
 
 // 연 단위 가격 추이 (분기별 점). 상승률 기준점 사이를 로그 보간하고 약간의 흔들림을 넣습니다.
 export function priceHistory(c: Complex, price: number) {
-  const anchors: [number, number][] = [
+  // 과거 거래가 없어 상승률을 모르는 시점은 건너뜁니다.
+  const anchors = ([
     [-10, price / (1 + c.growth.y10)],
     [-5, price / (1 + c.growth.y5)],
     [-3, price / (1 + c.growth.y3)],
     [-1, price / (1 + c.growth.y1)],
     [0, price],
-  ];
+  ] as [number, number][]).filter(([, p]) => Number.isFinite(p));
+  if (anchors.length === 1) anchors.unshift([-10, price]);
   const points: { t: number; price: number }[] = [];
   for (let q = -40; q <= 0; q++) {
     const t = q / 4;
+    if (t < anchors[0][0]) {
+      points.push({ t, price: NaN }); // 첫 기록보다 앞선 구간은 비워 둡니다
+      continue;
+    }
     let i = 0;
     while (i < anchors.length - 2 && t > anchors[i + 1][0]) i++;
     const [t0, p0] = anchors[i];
     const [t1, p1] = anchors[i + 1];
     const f = (t - t0) / (t1 - t0);
     const base = Math.exp(Math.log(p0) + (Math.log(p1) - Math.log(p0)) * f);
-    const wiggle = q === 0 ? 0 : Math.sin(q * 1.7 + c.art) * 0.025 + Math.sin(q * 0.6 + c.lat) * 0.02;
+    // 샘플에서만 분기별 흔들림을 넣습니다. 실제 데이터는 기준점 사이를 매끄럽게 잇습니다.
+    const wiggle = q === 0 || !IS_SAMPLE ? 0 : Math.sin(q * 1.7 + c.art) * 0.025 + Math.sin(q * 0.6 + c.lat) * 0.02;
     points.push({ t, price: base * (1 + wiggle) });
   }
   return points;
@@ -114,8 +136,12 @@ export function recommend(basePrice: number, excludeIds: string[], region: strin
   return out.sort((a, b) => totalScore(b.complex, w) - totalScore(a.complex, w));
 }
 
-export const formatEok = (v: number) => `${v.toFixed(1)}억`;
-export const pct = (v: number) => `${v >= 0 ? "+" : ""}${Math.round(v * 100)}%`;
+export const formatEok = (v: number) => (Number.isFinite(v) ? `${v.toFixed(1)}억` : "–");
+export const pct = (v: number) => (Number.isFinite(v) ? `${v >= 0 ? "+" : ""}${Math.round(v * 100)}%` : "–");
+/** 상승·하락 색 (값이 없으면 색 없음) */
+export const chgClass = (v: number) => (!Number.isFinite(v) ? "chg" : v >= 0 ? "chg up" : "chg down");
+/** 정렬용: 값이 없으면 맨 뒤로 */
+export const orLow = (v: number) => (Number.isFinite(v) ? v : -Infinity);
 
 // 전용면적 버킷: 58·52·53㎡처럼 애매한 평수는 59로, 76~94㎡는 84로 봅니다.
 export type Bucket = "59" | "84" | "기타";

@@ -4,8 +4,8 @@ import "leaflet/dist/leaflet.css";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createMapEngine, type LatLng, type MapEngine } from "@/lib/mapEngine";
-import { complexes, hojaeList, regions, type Complex } from "@/lib/data";
-import { bucketOf, formatEok, pct, totalScore, type Bucket } from "@/lib/score";
+import { complexes, hojaeList, IS_SAMPLE, regions, type Complex, householdsText } from "@/lib/data";
+import { bucketOf, formatEok, pct, totalScore, type Bucket, chgClass } from "@/lib/score";
 
 // 가격대별 색 (말풍선 테두리·점)
 const BANDS = [
@@ -98,7 +98,8 @@ export default function PriceMap() {
     const zoom = m.zoom();
     const inView = items.filter((x) => m.inView([x.c.lat, x.c.lng]));
     setVisible(inView.length);
-    const detailed = zoom >= 11 || inView.length <= 60;
+    // 화면 안 단지가 많으면 점으로, 적거나 충분히 확대하면 가격 말풍선으로
+    const detailed = inView.length <= 200 || zoom >= 15;
     for (const x of inView) {
       const color = bandColor(x.price);
       const p: LatLng = [x.c.lat, x.c.lng];
@@ -149,14 +150,14 @@ export default function PriceMap() {
         {BANDS.map((b) => (
           <span key={b.label}><i style={{ background: b.color }} />{b.label}</span>
         ))}
-        <span className="tiny muted">최근 3개월 실거래 평균 · 샘플 데이터</span>
+        <span className="tiny muted">최근 3개월 실거래 기준{IS_SAMPLE ? " · 샘플 데이터" : ""}</span>
       </div>
 
       {selected && (
         <aside className="pm-card">
           <button className="pm-close" onClick={() => setSelected(null)} aria-label="닫기">×</button>
           <h3>{selected.c.name}</h3>
-          <p className="tiny muted">{selected.c.city} {selected.c.district} · {selected.c.year}년 · {selected.c.households.toLocaleString()}세대</p>
+          <p className="tiny muted">{selected.c.city} {selected.c.district} · {selected.c.year}년{selected.c.households ? ` · ${householdsText(selected.c)}` : ""}</p>
           <div className="pm-sizes">
             {selected.c.sizes.map((s) => (
               <div key={s.area} className={s.area === selected.area ? "on" : ""}>
@@ -167,8 +168,8 @@ export default function PriceMap() {
             ))}
           </div>
           <p className="tiny">
-            종합 {totalScore(selected.c)}점 · 1년 <span className={selected.c.growth.y1 >= 0 ? "chg up" : "chg down"}>{pct(selected.c.growth.y1)}</span> · 5년{" "}
-            <span className={selected.c.growth.y5 >= 0 ? "chg up" : "chg down"}>{pct(selected.c.growth.y5)}</span> · 역 {selected.c.stationMeters}m
+            종합 {totalScore(selected.c)}점 · 1년 <span className={chgClass(selected.c.growth.y1)}>{pct(selected.c.growth.y1)}</span> · 5년{" "}
+            <span className={chgClass(selected.c.growth.y5)}>{pct(selected.c.growth.y5)}</span> · 역 {selected.c.stationMeters}m
           </p>
           <Link className="cta" href={`/?compare=${selected.c.id}:${selected.area}`}>이 단지 비교하기</Link>
         </aside>

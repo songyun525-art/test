@@ -39,7 +39,7 @@ export function Recommendations({
         )}
       </div>
       {recs.length === 0 ? (
-        <p className="empty muted">이 가격대(±5%)에 해당하는 다른 단지가 샘플 데이터에 없어요. 지역을 &lsquo;경기도 전체&rsquo;로 바꿔 보세요.</p>
+        <p className="empty muted">이 가격대(±5%)에 해당하는 다른 단지가 없어요. 지역을 &lsquo;경기도 전체&rsquo;로 바꿔 보세요.</p>
       ) : (
         <div className="recs-grid">
           {shown.map((r) => {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { IS_SAMPLE } from "@/lib/data";
 
 // 간단한 경기도 약도 (실제 지도는 카카오맵 연동 단계에서 교체)
 const W = 400;
@@ -116,7 +117,7 @@ export default function SketchMap({
         <button onClick={() => setZoom(zoom * 1.5)} aria-label="확대">+</button>
         <button onClick={() => setZoom(Math.max(zoom / 1.5, 1 / 8))} aria-label="축소">−</button>
       </div>
-      <span className="map-note">약도 · 샘플 위치</span>
+      <span className="map-note">약도{IS_SAMPLE ? " · 샘플 위치" : ""}</span>
     </div>
   );
 }

@@ -1,5 +1,6 @@
-// 단지 숫자는 샘플입니다. 실제 수집(국토부 실거래가·단지 정보, 카카오 로컬) 결과가 나오면
-// 같은 모양의 JSON으로 교체합니다. 가격 단위는 억 원입니다.
+// 단지 데이터: scripts/export-complexes.py 가 만든 lib/complexes.json (국토부 실거래가·단지 정보, 카카오 로컬)이
+// 있으면 그것을 쓰고, 비어 있으면 아래 샘플을 씁니다. 가격 단위는 억 원입니다.
+import real from "./complexes.json";
 
 export type SizeOption = {
   area: number; // 전용면적 (㎡). 화면에서는 59/84/기타 버킷으로 묶습니다.
@@ -14,14 +15,14 @@ export type Complex = {
   city: string; // 시
   district: string; // 구·동
   year: number; // 사용승인 연도
-  households: number;
-  far: number; // 용적률 (%)
+  households: number; // 0 = 정보 없음
+  far: number; // 용적률 (%), 0 = 정보 없음
   lat: number;
   lng: number;
   stationMeters: number; // 가장 가까운 지하철역까지 거리
   schoolMeters: number; // 가장 가까운 초등학교까지 거리
   gangnamMinutes: number; // 강남역까지 대중교통 시간
-  growth: { y1: number; y3: number; y5: number; y10: number }; // 상승률 (0.12 = 12%)
+  growth: { y1: number; y3: number; y5: number; y10: number }; // 상승률 (0.12 = 12%), NaN = 비교할 과거 거래 없음
   sizes: SizeOption[];
   art: number; // 일러스트 모양 번호
 };
@@ -39,12 +40,16 @@ export type Hojae = {
   lng: number;
 };
 
-export const DATA_AS_OF = "2026.09";
+const REAL = real as unknown as { asOf: string | null; rows: Row[] };
+const REAL_ROWS = REAL.rows;
+/** 실제 수집 데이터가 아니라 화면 확인용 샘플인지 */
+export const IS_SAMPLE = REAL_ROWS.length === 0;
+export const DATA_AS_OF = IS_SAMPLE ? "2026.09" : String(REAL.asOf).slice(0, 7).replace("-", ".");
 
 type Row = [
   id: string, name: string, city: string, district: string, year: number, households: number, far: number,
   lat: number, lng: number, stationMeters: number, schoolMeters: number, gangnamMinutes: number,
-  growth: [number, number, number, number], sizes: [number, number, number, number][], art: number,
+  growth: [number | null, number | null, number | null, number | null], sizes: [number, number, number, number][], art: number,
 ];
 
 const ROWS: Row[] = [
@@ -71,10 +76,13 @@ const ROWS: Row[] = [
   ["gwacheon-raemian", "과천 래미안슈르", "과천시", "원문동", 2008, 2899, 220, 37.4292, 126.9911, 350, 300, 30, [0.13, 0.25, 0.58, 1.3], [[59, 25, 13.9, 4], [84, 34, 17.8, 6]], 6],
 ];
 
-export const complexes: Complex[] = ROWS.map(
+/** 세대수 표시 (정보 없으면 빈 문자열) */
+export const householdsText = (c: { households: number }) => (c.households ? `${c.households.toLocaleString()}세대` : "");
+
+export const complexes: Complex[] = (IS_SAMPLE ? ROWS : REAL_ROWS).map(
   ([id, name, city, district, year, households, far, lat, lng, stationMeters, schoolMeters, gangnamMinutes, g, sizes, art]) => ({
     id, name, city, district, year, households, far, lat, lng, stationMeters, schoolMeters, gangnamMinutes,
-    growth: { y1: g[0], y3: g[1], y5: g[2], y10: g[3] },
+    growth: { y1: g[0] ?? NaN, y3: g[1] ?? NaN, y5: g[2] ?? NaN, y10: g[3] ?? NaN },
     sizes: sizes.map(([area, pyeong, price, trades]) => ({ area, pyeong, price, trades })),
     art,
   }),
