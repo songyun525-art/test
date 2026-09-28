@@ -347,6 +347,7 @@ a { color: inherit; text-decoration: none; }
 .pm-legend { position: absolute; left: 12px; bottom: 16px; z-index: 500; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; background: rgba(255,255,255,.95); border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; font-size: 12px; }
 .pm-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: -1px; }
 .price-pin-wrap { background: none; border: 0; }
+.price-dot { width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; border: 1.5px solid #fff; cursor: pointer; }
 .price-pin { transform: translate(-50%, calc(-100% - 6px)); display: inline-flex; flex-direction: column; align-items: center; background: #fff; border: 2px solid var(--pin); border-radius: 8px; padding: 2px 7px; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,.15); cursor: pointer; line-height: 1.2; font-family: inherit; }
 .price-pin::after { content: ""; position: absolute; left: 50%; bottom: -7px; transform: translateX(-50%); border: 6px solid transparent; border-top-color: var(--pin); border-bottom: 0; }
 .price-pin b { font-size: 13px; font-weight: 800; color: var(--ink); }

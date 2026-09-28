@@ -43,3 +43,8 @@ npm run dev      # http://localhost:3000
 
 - 실제 수집 데이터 연결, 카카오맵으로 지도 교체
 - Vercel 배포
+
+## 지도 키 (선택)
+
+`/map` 지도는 `NEXT_PUBLIC_KAKAO_JS_KEY`(카카오 JavaScript 키)가 있으면 카카오맵을, 없으면 OpenStreetMap을 씁니다.
+카카오 개발자 콘솔에서 JavaScript SDK 도메인(또는 Web 플랫폼 사이트 도메인)에 배포 주소를 등록해야 합니다.

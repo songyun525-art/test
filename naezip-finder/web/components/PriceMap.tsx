@@ -3,7 +3,7 @@
 import "leaflet/dist/leaflet.css";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import type * as L from "leaflet";
+import { createMapEngine, type LatLng, type MapEngine } from "@/lib/mapEngine";
 import { complexes, hojaeList, regions, type Complex } from "@/lib/data";
 import { bucketOf, formatEok, pct, totalScore, type Bucket } from "@/lib/score";
 
@@ -21,6 +21,8 @@ const CITY_CENTER: Record<string, [number, number, number]> = {
   "경기도 전체": [37.42, 127.03, 10],
 };
 
+const escapeHtml = (t: string) => t.replace(/[&<>"]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[ch]!);
+
 type Item = { c: Complex; area: number; pyeong: number; price: number };
 
 function pickSize(c: Complex, size: "전체" | Bucket) {
@@ -31,10 +33,7 @@ function pickSize(c: Complex, size: "전체" | Bucket) {
 
 export default function PriceMap() {
   const box = useRef<HTMLDivElement>(null);
-  const map = useRef<L.Map | null>(null);
-  const layer = useRef<L.LayerGroup | null>(null);
-  const hojaeLayer = useRef<L.LayerGroup | null>(null);
-  const leaflet = useRef<typeof L | null>(null);
+  const map = useRef<MapEngine | null>(null);
 
   const [size, setSize] = useState<"전체" | Bucket>("84");
   const [maxPrice, setMaxPrice] = useState(30);
@@ -57,29 +56,21 @@ export default function PriceMap() {
     [size, maxPrice, region],
   );
 
-  // 지도 만들기 (브라우저에서만)
+  // 지도 만들기 (브라우저에서만). 카카오 키가 있으면 카카오맵, 없으면 OpenStreetMap
   useEffect(() => {
     let cancelled = false;
-    import("leaflet").then((mod) => {
-      if (cancelled || !box.current || map.current) return;
-      const Lf = (mod as unknown as { default?: typeof L }).default ?? (mod as unknown as typeof L);
-      leaflet.current = Lf;
-      const m = Lf.map(box.current, { zoomControl: false, preferCanvas: true }).setView([37.42, 127.03], 10);
-      Lf.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
-        subdomains: "abcd",
-        maxZoom: 19,
-      }).addTo(m);
-      Lf.control.zoom({ position: "bottomright" }).addTo(m);
-      hojaeLayer.current = Lf.layerGroup().addTo(m);
-      layer.current = Lf.layerGroup().addTo(m);
-      m.on("moveend zoomend", () => setTick((t) => t + 1));
-      map.current = m;
+    let engine: MapEngine | null = null;
+    const [lat, lng, z] = CITY_CENTER["경기도 전체"];
+    createMapEngine(box.current!, [lat, lng], z).then((e) => {
+      if (cancelled) return e.destroy();
+      engine = e;
+      e.onMove(() => setTick((t) => t + 1));
+      map.current = e;
       setReady(true);
     });
     return () => {
       cancelled = true;
-      map.current?.remove();
+      engine?.destroy();
       map.current = null;
     };
   }, []);
@@ -87,16 +78,12 @@ export default function PriceMap() {
   // 처음 열 때와 지역을 바꿀 때 그 지역 단지가 모두 보이게 이동
   useEffect(() => {
     const m = map.current;
-    const Lf = leaflet.current;
-    if (!m || !Lf) return;
+    if (!m) return;
     if (!items.length) {
       const [lat, lng, z] = CITY_CENTER["경기도 전체"];
       m.setView([lat, lng], z);
     } else {
-      m.fitBounds(Lf.latLngBounds(items.map((x) => [x.c.lat, x.c.lng] as [number, number])).pad(0.15), {
-        maxZoom: 14,
-        paddingTopLeft: [0, 70],
-      });
+      m.fit(items.map((x) => [x.c.lat, x.c.lng] as LatLng), 14, 70);
     }
     setTick((t) => t + 1);
     // items 전체가 아니라 지역이 바뀔 때만 이동
@@ -106,46 +93,32 @@ export default function PriceMap() {
   // 가격 말풍선 그리기: 확대가 작으면 점, 크면 가격까지
   useEffect(() => {
     const m = map.current;
-    const Lf = leaflet.current;
-    const g = layer.current;
-    if (!m || !Lf || !g) return;
-    g.clearLayers();
-    const bounds = m.getBounds().pad(0.2);
-    const zoom = m.getZoom();
-    const inView = items.filter((x) => bounds.contains([x.c.lat, x.c.lng]));
+    if (!m) return;
+    m.clearPins();
+    const zoom = m.zoom();
+    const inView = items.filter((x) => m.inView([x.c.lat, x.c.lng]));
     setVisible(inView.length);
     const detailed = zoom >= 11 || inView.length <= 60;
     for (const x of inView) {
       const color = bandColor(x.price);
-      const marker = detailed
-        ? Lf.marker([x.c.lat, x.c.lng], {
-            icon: Lf.divIcon({
-              className: "price-pin-wrap",
-              html: `<div class="price-pin${selected?.c.id === x.c.id ? " on" : ""}" style="--pin:${color}"><b>${formatEok(x.price)}</b><span>${x.area}㎡${zoom >= 13 ? ` · ${x.c.name}` : ""}</span></div>`,
-              iconSize: undefined,
-              iconAnchor: [0, 0],
-            }),
-            riseOnHover: true,
-          })
-        : Lf.circleMarker([x.c.lat, x.c.lng], { radius: 5, color: "#fff", weight: 1.5, fillColor: color, fillOpacity: 0.95 });
-      marker.on("click", () => setSelected(x));
-      marker.addTo(g);
+      const p: LatLng = [x.c.lat, x.c.lng];
+      if (detailed) {
+        const html = `<div class="price-pin${selected?.c.id === x.c.id ? " on" : ""}" style="--pin:${color}"><b>${formatEok(x.price)}</b><span>${x.area}㎡${zoom >= 13 ? ` · ${escapeHtml(x.c.name)}` : ""}</span></div>`;
+        m.pin(p, html, () => setSelected(x));
+      } else {
+        m.dot(p, color, () => setSelected(x));
+      }
     }
   }, [items, tick, selected]);
 
   // 호재 반경 3km
   useEffect(() => {
-    const Lf = leaflet.current;
-    const g = hojaeLayer.current;
-    if (!Lf || !g) return;
-    g.clearLayers();
+    const m = map.current;
+    if (!m) return;
+    m.clearCircles();
     if (!showHojae) return;
-    for (const h of hojaeList) {
-      Lf.circle([h.lat, h.lng], { radius: 3000, color: "#f59e0b", weight: 1, dashArray: "4 4", fillOpacity: 0.08 })
-        .bindTooltip(`${h.badge} · ${h.title} (${h.status})`)
-        .addTo(g);
-    }
-  }, [showHojae, tick]);
+    for (const h of hojaeList) m.circle([h.lat, h.lng], 3000, `${h.badge} · ${h.title} (${h.status})`);
+  }, [showHojae, ready]);
 
   return (
     <div className="pricemap">
