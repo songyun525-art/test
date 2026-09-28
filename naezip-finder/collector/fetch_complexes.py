@@ -77,8 +77,8 @@ def main() -> None:
             info = fetch_info(k)
         except ApiError as e:
             # 하루 호출 한도 초과 등: 받은 데까지 저장돼 있으니 멈추고 다음에 이어서 받는다.
-            print(f"중단 ({i - 1}곳 완료): {e}")
-            return
+            # 0이 아닌 코드로 끝내서 감싼 스크립트가 다시 돌릴 수 있게 한다.
+            raise SystemExit(f"중단 ({i - 1}곳 완료): {e}")
         (info_dir / f"{k}.json").write_text(json.dumps(info, ensure_ascii=False))
         if i % 200 == 0:
             print(f"  {i}/{len(todo)}")
