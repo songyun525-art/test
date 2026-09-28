@@ -48,3 +48,15 @@ npm run dev      # http://localhost:3000
 
 `/map` 지도는 `NEXT_PUBLIC_KAKAO_JS_KEY`(카카오 JavaScript 키)가 있으면 카카오맵을, 없으면 OpenStreetMap을 씁니다.
 카카오 개발자 콘솔에서 JavaScript SDK 도메인(또는 Web 플랫폼 사이트 도메인)에 배포 주소를 등록해야 합니다.
+
+## 실제 단지 데이터 넣기
+
+수집기(`naezip-finder/collector`)가 만든 `naezip.sqlite`를 사이트용 `lib/complexes.json`으로 바꿉니다.
+`lib/complexes.json`이 비어 있으면 샘플 21개 단지를 씁니다.
+
+```bash
+# 1) 단지 좌표, 가장 가까운 지하철역·초등학교 거리 (카카오 로컬, 이미 구한 단지는 건너뜀)
+KAKAO_REST_KEY=... python3 scripts/export-complexes.py geo --db ../data/naezip.sqlite --cache ../data/web/geo.json --workers 32
+# 2) 내보내기: 최근 1년 거래가 있고 100세대 이상(세대수 모르면 10년 거래 30건 이상)인 단지
+python3 scripts/export-complexes.py export --db ../data/naezip.sqlite --cache ../data/web/geo.json
+```

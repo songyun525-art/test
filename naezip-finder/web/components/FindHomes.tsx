@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import SketchMap, { type MapPin } from "./SketchMap";
 import BuildingArt from "./BuildingArt";
-import { complexes, regions } from "@/lib/data";
-import { bucketOf, formatEok, pct, totalScore, type Bucket } from "@/lib/score";
+import { complexes, regions, householdsText } from "@/lib/data";
+import { bucketOf, formatEok, pct, totalScore, type Bucket, chgClass, orLow } from "@/lib/score";
 
 type Sort = "종합점수" | "가격 낮은 순" | "1년 상승률";
 
@@ -14,16 +14,18 @@ export default function FindHomes({ initialBudget }: { initialBudget: number }) 
   const [size, setSize] = useState<"전체" | Bucket>("84");
   const [region, setRegion] = useState("경기도 전체");
   const [sort, setSort] = useState<Sort>("종합점수");
+  const [shown, setShown] = useState(30);
 
-  const items = complexes
+  const items = useMemo(() => complexes
     .filter((c) => region === "경기도 전체" || c.city === region)
     .flatMap((c) => c.sizes.map((s) => ({ c, s, bucket: bucketOf(s.area), score: totalScore(c) })))
     .filter((x) => x.s.price <= budget && (size === "전체" || x.bucket === size))
     .sort((a, b) =>
-      sort === "종합점수" ? b.score - a.score : sort === "가격 낮은 순" ? a.s.price - b.s.price : b.c.growth.y1 - a.c.growth.y1,
-    );
+      sort === "종합점수" ? b.score - a.score : sort === "가격 낮은 순" ? a.s.price - b.s.price : orLow(b.c.growth.y1) - orLow(a.c.growth.y1),
+    ), [budget, size, region, sort]);
 
-  const pins: MapPin[] = items.map((x, i) => ({
+  // 약도에는 위쪽 150곳만 찍습니다. 전체는 "크게 보기" 지도에서 봅니다.
+  const pins: MapPin[] = items.slice(0, 150).map((x, i) => ({
     id: `${x.c.id}-${x.s.area}`,
     lat: x.c.lat,
     lng: x.c.lng,
@@ -62,20 +64,20 @@ export default function FindHomes({ initialBudget }: { initialBudget: number }) 
       <section className="panel find-list">
         <div className="panel-head">
           <h2>{formatEok(budget)}으로 살 수 있는 집</h2>
-          <span className="muted">{items.length}곳 · 최근 3개월 실거래 평균 기준</span>
+          <span className="muted">{items.length.toLocaleString()}곳 · 최근 3개월 실거래 기준</span>
         </div>
         {items.length === 0 ? (
-          <p className="empty muted">조건에 맞는 단지가 샘플 데이터에 없어요. 예산이나 평형을 바꿔 보세요.</p>
+          <p className="empty muted">조건에 맞는 단지가 없어요. 예산이나 평형을 바꿔 보세요.</p>
         ) : (
           <ol className="home-list">
-            {items.map((x, i) => (
+            {items.slice(0, shown).map((x, i) => (
               <li key={`${x.c.id}-${x.s.area}`}>
                 <span className={i < 3 ? "rank top" : "rank"}>{i + 1}</span>
                 <BuildingArt seed={x.c.art} className="home-art" />
                 <div className="home-main">
                   <b>{x.c.name}</b>
-                  <span className="tiny muted">{x.c.city} {x.c.district} · {x.c.year}년 · {x.c.households.toLocaleString()}세대</span>
-                  <span className="tiny">전용 {x.s.area}㎡ ({x.s.pyeong}평) · 종합 {x.score}점 · 1년 <span className={x.c.growth.y1 >= 0 ? "chg up" : "chg down"}>{pct(x.c.growth.y1)}</span></span>
+                  <span className="tiny muted">{x.c.city} {x.c.district} · {x.c.year}년{x.c.households ? ` · ${householdsText(x.c)}` : ""}</span>
+                  <span className="tiny">전용 {x.s.area}㎡ ({x.s.pyeong}평) · 종합 {x.score}점 · 1년 <span className={chgClass(x.c.growth.y1)}>{pct(x.c.growth.y1)}</span></span>
                 </div>
                 <div className="home-price">
                   <b>{formatEok(x.s.price)}</b>
@@ -85,6 +87,11 @@ export default function FindHomes({ initialBudget }: { initialBudget: number }) 
               </li>
             ))}
           </ol>
+        )}
+        {items.length > shown && (
+          <button className="chip-btn more-btn" onClick={() => setShown(shown + 30)}>
+            {Math.min(30, items.length - shown)}곳 더 보기 ({shown}/{items.length})
+          </button>
         )}
       </section>
 

@@ -32,7 +32,7 @@ export default function ScorePanel({
     <section className="panel score-panel">
       <div className="panel-head">
         <h2>종합 비교 결과</h2>
-        <span className="muted">샘플 단지 대비 백분위 점수로 비교했습니다. (가중치: {weightText})</span>
+        <span className="muted">경기도 단지 대비 점수로 비교했습니다. (가중치: {weightText})</span>
         <button className="chip-btn right" onClick={() => setHelp(!help)} aria-expanded={help}>
           <Icon name="help" size={14} /> 항목별 점수 설명
         </button>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { cities, complexes, type Complex } from "@/lib/data";
+import { cities, complexes, IS_SAMPLE, type Complex, householdsText } from "@/lib/data";
 import { bucketOf, formatEok, pct } from "@/lib/score";
 
 const TABS = ["시별 대장아파트", "1년 상승 TOP", "1년 하락 TOP", "거래 활발 TOP"] as const;
@@ -70,7 +70,7 @@ export default function StudyReference() {
           </select>
         </div>
         {rows.length === 0 ? (
-          <p className="empty muted">이 지역에는 해당하는 단지가 샘플 데이터에 없어요.</p>
+          <p className="empty muted">이 지역에는 해당하는 단지가 없어요.</p>
         ) : (
           <table className="rank-table">
             <thead>
@@ -80,7 +80,7 @@ export default function StudyReference() {
               {rows.map((r, i) => (
                 <tr key={r.c.id}>
                   <td><span className={i < 3 ? "rank top" : "rank"}>{i + 1}</span></td>
-                  <td><b>{r.c.name}</b><div className="tiny muted">{r.c.year}년 · {r.c.households.toLocaleString()}세대</div></td>
+                  <td><b>{r.c.name}</b><div className="tiny muted">{r.c.year}년{r.c.households ? ` · ${householdsText(r.c)}` : ""}</div></td>
                   <td className="muted">{r.c.city} {r.c.district}</td>
                   <td><b>{r.value}</b><div className="tiny muted">{r.sub}</div></td>
                   <td><Link className="link-btn" href={`/?compare=${r.c.id}:${main84(r.c).area}`}>비교하기</Link></td>
@@ -89,7 +89,7 @@ export default function StudyReference() {
             </tbody>
           </table>
         )}
-        <p className="tiny muted">샘플 데이터 기준이에요. 실거래 수집이 끝나면 경기도 전체 단지로 바뀌어요.</p>
+        {IS_SAMPLE && <p className="tiny muted">샘플 데이터 기준이에요. 실거래 수집이 끝나면 경기도 전체 단지로 바뀌어요.</p>}
       </section>
     </div>
   );

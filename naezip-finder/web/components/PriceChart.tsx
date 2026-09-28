@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import Icon from "./Icon";
-import { DATA_AS_OF } from "@/lib/data";
-import { formatEok, pct, priceHistory } from "@/lib/score";
+import { DATA_AS_OF, IS_SAMPLE } from "@/lib/data";
+import { formatEok, pct, priceHistory, chgClass } from "@/lib/score";
 import { SLOT_COLORS, slotPrice, slotSize, type Slot } from "./Compare";
 
 const W = 520;
@@ -14,7 +14,7 @@ const END_YEAR = 2026;
 export function PriceChart({ slots }: { slots: Slot[] }) {
   const [hover, setHover] = useState<number | null>(null);
   const series = slots.map((s) => priceHistory(s.complex, slotSize(s).price));
-  const all = series.flat().map((p) => p.price);
+  const all = series.flat().map((p) => p.price).filter(Number.isFinite);
   const rawMin = Math.min(...all);
   const rawMax = Math.max(...all);
   const step = [1, 2, 5, 10].find((st) => (rawMax - rawMin) / st <= 5) ?? 10;
@@ -34,7 +34,7 @@ export function PriceChart({ slots }: { slots: Slot[] }) {
     <section className="panel chart-panel">
       <div className="panel-head">
         <h2>최근 10년 가격 추이</h2>
-        <span className="muted">(샘플 · 평형별 기준가)</span>
+        <span className="muted">(평형별 기준가{IS_SAMPLE ? " · 샘플" : ""})</span>
       </div>
       <div className="legend">
         {slots.map((s, i) => (
@@ -69,13 +69,13 @@ export function PriceChart({ slots }: { slots: Slot[] }) {
           {series.map((pts, i) => (
             <g key={slots[i].complex.id}>
               <polyline
-                points={pts.map((p) => `${x(p.t)},${y(p.price)}`).join(" ")}
+                points={pts.filter((p) => Number.isFinite(p.price)).map((p) => `${x(p.t)},${y(p.price)}`).join(" ")}
                 fill="none"
                 stroke={SLOT_COLORS[i]}
                 strokeWidth="2"
                 strokeLinejoin="round"
               />
-              <circle cx={x(pts[idx].t)} cy={y(pts[idx].price)} r="4" fill={SLOT_COLORS[i]} stroke="var(--surface)" strokeWidth="2" />
+              {Number.isFinite(pts[idx].price) && <circle cx={x(pts[idx].t)} cy={y(pts[idx].price)} r="4" fill={SLOT_COLORS[i]} stroke="var(--surface)" strokeWidth="2" />}
             </g>
           ))}
         </svg>
@@ -112,10 +112,10 @@ export function MetricsTable({ slots }: { slots: Slot[] }) {
           {slots.map((s, i) => (
             <tr key={s.complex.id}>
               <td><i className="dot" style={{ background: SLOT_COLORS[i] }} />{s.complex.name}</td>
-              <td>{s.complex.households.toLocaleString()}</td>
+              <td>{s.complex.households ? s.complex.households.toLocaleString() : "–"}</td>
               <td>{s.complex.year}</td>
               {(["y1", "y3", "y5", "y10"] as const).map((k) => (
-                <td key={k} className="up">{pct(s.complex.growth[k])}</td>
+                <td key={k} className={chgClass(s.complex.growth[k]).replace("chg ", "")}>{pct(s.complex.growth[k])}</td>
               ))}
             </tr>
           ))}

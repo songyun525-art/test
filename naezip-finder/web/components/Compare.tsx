@@ -5,6 +5,7 @@ import Icon from "./Icon";
 import BuildingArt from "./BuildingArt";
 import type { Complex } from "@/lib/data";
 import { formatEok } from "@/lib/score";
+import { householdsText } from "@/lib/data";
 
 export const SLOT_COLORS = ["#e5484d", "#3e7bfa", "#2e9e5b"];
 
@@ -88,7 +89,7 @@ export default function Compare({
                 </button>
               </div>
               <p className="meta">
-                {s.complex.city} {s.complex.district} | {s.complex.year}년 | {s.complex.households.toLocaleString()}세대
+                {s.complex.city} {s.complex.district} | {s.complex.year}년{s.complex.households ? ` | ${householdsText(s.complex)}` : ""}
               </p>
               <BuildingArt seed={s.complex.art} className="card-art" />
               <select className="size-select" value={s.area} onChange={(e) => onSize(i, Number(e.target.value))} aria-label="평형">

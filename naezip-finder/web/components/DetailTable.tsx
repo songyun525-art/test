@@ -1,15 +1,16 @@
 import { SLOT_COLORS, slotSize, type Slot } from "./Compare";
-import { formatEok, nearbyHojae, pct } from "@/lib/score";
+import { formatEok, nearbyHojae, pct, chgClass, orLow } from "@/lib/score";
+import { householdsText } from "@/lib/data";
 
 type RowDef = { label: string; cell: (s: Slot) => React.ReactNode; best?: (s: Slot) => number };
 
 const pastPrice = (s: Slot, g: number) => slotSize(s).price / (1 + g);
 
 const ROWS: RowDef[] = [
-  { label: "세대수", cell: (s) => `${s.complex.households.toLocaleString()}세대`, best: (s) => s.complex.households },
+  { label: "세대수", cell: (s) => householdsText(s.complex) || "–", best: (s) => s.complex.households || -Infinity },
   { label: "연식 (사용승인)", cell: (s) => `${s.complex.year}년 (${2026 - s.complex.year}년차)`, best: (s) => s.complex.year },
   { label: "평형", cell: (s) => `전용 ${slotSize(s).area}㎡ (${slotSize(s).pyeong}평)` },
-  { label: "용적률", cell: (s) => `${s.complex.far}%`, best: (s) => -s.complex.far },
+  { label: "용적률", cell: (s) => (s.complex.far ? `${s.complex.far}%` : "–"), best: (s) => (s.complex.far ? -s.complex.far : -Infinity) },
   { label: "초등학교", cell: (s) => `${s.complex.schoolMeters.toLocaleString()}m${s.complex.schoolMeters <= 300 ? " (초품아)" : ""}`, best: (s) => -s.complex.schoolMeters },
   { label: "지하철역", cell: (s) => `${s.complex.stationMeters.toLocaleString()}m · 강남 ${s.complex.gangnamMinutes}분`, best: (s) => -s.complex.stationMeters },
   {
@@ -26,10 +27,10 @@ const ROWS: RowDef[] = [
     cell: (s: Slot) => (
       <>
         {formatEok(pastPrice(s, s.complex.growth[k]))}{" "}
-        <span className={s.complex.growth[k] >= 0 ? "chg up" : "chg down"}>{pct(s.complex.growth[k])}</span>
+        <span className={chgClass(s.complex.growth[k])}>{pct(s.complex.growth[k])}</span>
       </>
     ),
-    best: (s: Slot) => s.complex.growth[k],
+    best: (s: Slot) => orLow(s.complex.growth[k]),
   })),
 ];
 
@@ -38,7 +39,7 @@ export default function DetailTable({ slots }: { slots: Slot[] }) {
     <section className="panel wide detail-panel">
       <div className="panel-head">
         <h2>매물 상세 비교표</h2>
-        <span className="muted">항목별로 더 나은 쪽에 ● 표시 (샘플 데이터)</span>
+        <span className="muted">항목별로 더 나은 쪽에 ● 표시</span>
       </div>
       <div className="detail-scroll">
         <table className="detail">
@@ -53,7 +54,8 @@ export default function DetailTable({ slots }: { slots: Slot[] }) {
           <tbody>
             {ROWS.map((r) => {
               const vals = r.best && slots.length > 1 ? slots.map(r.best) : null;
-              const top = vals ? Math.max(...vals) : null;
+              // 모두 같거나 값이 없으면 표시하지 않습니다.
+              const top = vals && new Set(vals).size > 1 && Number.isFinite(Math.max(...vals)) ? Math.max(...vals) : null;
               return (
                 <tr key={r.label}>
                   <th scope="row">{r.label}</th>

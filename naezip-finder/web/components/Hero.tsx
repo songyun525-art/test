@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Icon from "./Icon";
-import { complexes, regions, type Complex } from "@/lib/data";
+import { complexes, regions, type Complex, householdsText } from "@/lib/data";
 
 export function Skyline() {
   const towers = [
@@ -120,7 +120,7 @@ export default function Hero({
                   <button type="button" onMouseDown={() => pick(c)}>
                     <strong>{c.name}</strong>
                     <span>
-                      {c.city} {c.district} · {c.year}년 · {c.households.toLocaleString()}세대
+                      {c.city} {c.district} · {c.year}년{c.households ? ` · ${householdsText(c)}` : ""}
                     </span>
                   </button>
                 </li>
