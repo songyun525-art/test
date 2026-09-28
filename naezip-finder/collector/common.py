@@ -41,7 +41,9 @@ def get_items(url: str, params: dict, retries: int = 4) -> tuple[list[dict], int
             last = e
             time.sleep(2 ** (attempt + 1))
     shown = {k: v for k, v in params.items() if k != "serviceKey"}
-    raise ApiError(f"{url} {shown}: {last}")
+    # requests 오류 메시지에는 serviceKey가 든 전체 URL이 들어 있으므로 가린다
+    reason = str(last).replace(params["serviceKey"], "***")
+    raise ApiError(f"{url} {shown}: {reason}")
 
 
 def parse_response(content: bytes) -> tuple[list[dict], int]:
