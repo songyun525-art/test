@@ -89,7 +89,7 @@ export default function FindHomes({ initialBudget }: { initialBudget: number }) 
       </section>
 
       <section className="panel map-panel">
-        <div className="panel-head"><h2>지도</h2><span className="muted">빨간 핀이 상위 3곳</span></div>
+        <div className="panel-head"><h2>지도</h2><span className="muted">빨간 핀이 상위 3곳</span><Link href="/map" className="link-btn right">크게 보기 ↗</Link></div>
         <SketchMap pins={pins} fit={items.slice(0, 5).map((x) => x.c)} label="예산에 맞는 단지 지도" />
       </section>
     </div>
