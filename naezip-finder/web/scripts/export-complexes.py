@@ -44,11 +44,34 @@ MAIN_BUCKETS = ("84", "59", "74", "대형", "소형")
 TODAY = date.today()
 
 
+KAPT_INFO: Path | None = None  # K-apt 단지 상세 원자료 폴더 (세대수 보충용)
+
+
+def households_of(k: dict) -> int | None:
+    """DB에 세대수가 비어 있으면("1474.0" 같은 소수 표기로 못 읽은 경우) 원자료에서 다시 읽습니다."""
+    if k.get("households"):
+        return k["households"]
+    if KAPT_INFO:
+        path = KAPT_INFO / f"{k['kapt_code']}.json"
+        if path.exists():
+            raw = json.loads(path.read_text())
+            for key in ("kaptdaCnt", "hoCnt"):
+                try:
+                    n = int(float(raw.get(key) or 0))
+                except ValueError:
+                    n = 0
+                if n:
+                    return n
+    return None
+
+
 def db_complexes(db: Path) -> dict[str, dict]:
     """최근 1년 안에 거래가 있는 단지만, 평형별 통계를 묶어 돌려줍니다."""
     conn = sqlite3.connect(db)
     conn.row_factory = sqlite3.Row
     info = {r["kapt_code"]: dict(r) for r in conn.execute("SELECT * FROM complexes")}
+    for k in info.values():
+        k["households"] = households_of(k)
     cutoff = date(TODAY.year - 1, TODAY.month, 1).isoformat()
     out: dict[str, dict] = {}
     for r in conn.execute("SELECT * FROM stats WHERE ref_price IS NOT NULL ORDER BY apt_seq"):
@@ -189,7 +212,10 @@ def main() -> None:
     p.add_argument("--db", type=Path, required=True)
     p.add_argument("--cache", type=Path, required=True)
     p.add_argument("--workers", type=int, default=6)
+    p.add_argument("--kapt-info", type=Path, help="K-apt 단지 상세 원자료 폴더 (raw/complexes/info)")
     a = p.parse_args()
+    global KAPT_INFO
+    KAPT_INFO = a.kapt_info
     run_geo(a.db, a.cache, a.workers) if a.stage == "geo" else run_export(a.db, a.cache)
 
 
