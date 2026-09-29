@@ -7,6 +7,8 @@ import type { Complex } from "@/lib/data";
 import { formatEok } from "@/lib/score";
 import { householdsText } from "@/lib/data";
 import { ComplexName } from "./ComplexDetail";
+import TrustLine from "./metrics/TrustLine";
+import JeonseLine from "./metrics/JeonseLine";
 
 export const SLOT_COLORS = ["#e5484d", "#3e7bfa", "#2e9e5b"];
 
@@ -104,12 +106,11 @@ export default function Compare({
                 {s.customPrice !== undefined ? "호가 입력" : "실거래 기준"}
               </span>
               <div className="price">{formatEok(slotPrice(s))}</div>
-              <p className="tiny muted">
-                {s.customPrice !== undefined
-                  ? `실거래 3개월 평균 ${formatEok(size.price)}`
-                  : `최근 3개월 평균 · ${size.trades}건${size.trades < 3 ? " (낮은 표본)" : ""}`}
-              </p>
+              <TrustLine size={size} prefix={s.customPrice !== undefined ? `실거래 기준가 ${formatEok(size.price)}` : ""} />
               <PriceInput key={`${s.area}-${s.customPrice}`} slot={s} onPrice={(v) => onPrice(i, v)} />
+              <div className="card-metric">
+                <JeonseLine size={size} price={slotPrice(s)} />
+              </div>
             </article>
           );
         })}

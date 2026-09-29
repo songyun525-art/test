@@ -1,6 +1,10 @@
-import { SLOT_COLORS, slotSize, type Slot } from "./Compare";
+import { SLOT_COLORS, slotPrice, slotSize, type Slot } from "./Compare";
 import { formatEok, nearbyHojae, pct, chgClass, orLow } from "@/lib/score";
 import { householdsText } from "@/lib/data";
+import { tradeTrust, dateText } from "@/lib/metrics/trust";
+import { jeonseMetrics, ratioText } from "@/lib/metrics/jeonse";
+import { peakRecovery } from "@/lib/metrics/recovery";
+import { MetricBadge, SampleTag } from "./metrics/MetricBadge";
 
 export type RowDef = { label: string; cell: (s: Slot) => React.ReactNode; best?: (s: Slot) => number };
 
@@ -22,6 +26,76 @@ export const ROWS: RowDef[] = [
     best: (s) => nearbyHojae(s.complex).length,
   },
   { label: "현재 실거래가", cell: (s) => formatEok(slotSize(s).price) },
+  {
+    label: "거래 신뢰도",
+    cell: (s) => {
+      const t = tradeTrust(slotSize(s));
+      return (
+        <>
+          <MetricBadge tone={t.tone}>{t.level ? `신뢰도 ${t.level}` : t.label}</MetricBadge> {t.detail}
+          <div className="tiny muted">마지막 거래 {dateText(t.lastDeal)}{t.caution ? ` · ${t.caution}` : ""}</div>
+        </>
+      );
+    },
+    best: (s) => {
+      const t = tradeTrust(slotSize(s));
+      return t.months ? (t.months === 3 ? 1000 : 0) + t.count / t.months : -Infinity;
+    },
+  },
+  {
+    label: "최근 전세가",
+    cell: (s) => {
+      const j = jeonseMetrics(slotSize(s), slotPrice(s));
+      if (j.status === "missing") return <span className="muted">{j.label}</span>;
+      return (
+        <>
+          {formatEok(j.price)} <span className="tiny muted">1년</span> <span className={chgClass(j.y1)}>{pct(j.y1)}</span>
+          {j.isSample && <SampleTag />}
+        </>
+      );
+    },
+  },
+  {
+    label: "전세가율 · 갭",
+    cell: (s) => {
+      const j = jeonseMetrics(slotSize(s), slotPrice(s));
+      if (j.status === "missing") return <span className="muted">–</span>;
+      return (
+        <>
+          <MetricBadge tone={j.tone}>{ratioText(j.ratio)}</MetricBadge> 갭 {formatEok(j.gap)}
+        </>
+      );
+    },
+    best: (s) => {
+      const j = jeonseMetrics(slotSize(s), slotPrice(s));
+      return j.status === "ok" ? j.ratio : -Infinity;
+    },
+  },
+  {
+    label: "10년 최고가",
+    cell: (s) => {
+      const r = peakRecovery(s.complex, slotSize(s), slotPrice(s));
+      if (r.status === "missing") return <span className="muted">–</span>;
+      return (
+        <>
+          {formatEok(r.peak)} <span className="tiny muted">({r.peakWhen})</span>
+        </>
+      );
+    },
+  },
+  {
+    label: "고점 대비",
+    cell: (s) => {
+      const r = peakRecovery(s.complex, slotSize(s), slotPrice(s));
+      if (r.status === "missing") return <span className="muted">–</span>;
+      return (
+        <>
+          <span className={r.drawdown >= 0 ? "chg up" : "chg down"}>{`${r.drawdown >= 0 ? "+" : ""}${(r.drawdown * 100).toFixed(1)}%`}</span>
+          {" · "}회복률 {Math.round(r.recovery * 100)}% <MetricBadge tone={r.tone}>{r.stage}</MetricBadge>
+        </>
+      );
+    },
+  },
   ...(["y1", "y3", "y5"] as const).map((k, i) => ({
     label: `${[1, 3, 5][i]}년 전 실거래가`,
     cell: (s: Slot) => (
