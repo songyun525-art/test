@@ -347,6 +347,16 @@ a { color: inherit; text-decoration: none; }
 .pm-legend { position: absolute; left: 12px; bottom: 16px; z-index: 500; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; background: rgba(255,255,255,.95); border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; font-size: 12px; }
 .pm-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: -1px; }
 .price-pin-wrap { background: none; border: 0; }
+/* 비교함 단지: 번호가 붙은 큰 핀 */
+.cmp-pin { position: relative; transform: translate(-50%, calc(-100% - 9px)); display: inline-flex; align-items: center; gap: 7px; background: #1f2530; color: #fff; border: 2px solid #fff; border-radius: 12px; padding: 5px 10px 5px 5px; white-space: nowrap; box-shadow: 0 4px 14px rgba(0,0,0,.35); cursor: pointer; line-height: 1.25; font-family: inherit; }
+.cmp-pin::after { content: ""; position: absolute; left: 50%; bottom: -9px; transform: translateX(-50%); border: 8px solid transparent; border-top-color: #1f2530; border-bottom: 0; }
+.cmp-pin i { font-style: normal; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--brand); font-size: 14px; font-weight: 900; }
+.cmp-pin b { display: block; font-size: 13px; font-weight: 800; }
+.cmp-pin span { display: block; font-size: 11px; opacity: .85; }
+.cmp-pin.on { background: var(--brand); }
+.cmp-pin.on::after { border-top-color: var(--brand); }
+.cmp-pin.on i { background: #1f2530; }
+.pm-compare { border: 0; background: #1f2530; color: #fff; font-weight: 800; font-size: 12.5px; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
 .price-dot { width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; border: 1.5px solid #fff; cursor: pointer; }
 .price-pin { transform: translate(-50%, calc(-100% - 6px)); display: inline-flex; flex-direction: column; align-items: center; background: #fff; border: 2px solid var(--pin); border-radius: 8px; padding: 2px 7px; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,.15); cursor: pointer; line-height: 1.2; font-family: inherit; }
 .price-pin::after { content: ""; position: absolute; left: 50%; bottom: -7px; transform: translateX(-50%); border: 6px solid transparent; border-top-color: var(--pin); border-bottom: 0; }
@@ -375,6 +385,7 @@ a { color: inherit; text-decoration: none; }
 
 /* 비교함 (다른 화면 아래에 떠 있음) */
 body:has(.tray-bar) .main { padding-bottom: 110px; }
+body:has(.tray-bar) .pm-legend { bottom: 84px; }
 .compare-tray { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 900; display: flex; flex-direction: column; align-items: center; gap: 8px; width: min(760px, calc(100% - 24px)); pointer-events: none; }
 .compare-tray > * { pointer-events: auto; }
 .tray-msg { background: #1f2530; color: #fff; padding: 8px 14px; border-radius: 10px; font-size: 13px; }

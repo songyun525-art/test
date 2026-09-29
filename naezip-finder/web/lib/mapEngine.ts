@@ -15,7 +15,8 @@ export interface MapEngine {
   fit(points: LatLng[], maxZoom: number, topPadding: number): void;
   onMove(cb: () => void): void;
   clearPins(): void;
-  pin(p: LatLng, html: string, onClick: () => void): void;
+  /** front: 다른 핀보다 위에 그림 (비교 단지) */
+  pin(p: LatLng, html: string, onClick: () => void, front?: boolean): void;
   dot(p: LatLng, color: string, onClick: () => void): void;
   clearCircles(): void;
   circle(p: LatLng, radius: number, title: string): void;
@@ -57,8 +58,8 @@ async function createLeaflet(el: HTMLElement, center: LatLng, zoom: number): Pro
     fit: (points, maxZoom, top) => m.fitBounds(Lf.latLngBounds(points).pad(0.15), { maxZoom, paddingTopLeft: [0, top] }),
     onMove: (cb) => m.on("moveend zoomend", cb),
     clearPins: () => pins.clearLayers(),
-    pin: (p, html, onClick) =>
-      Lf.marker(p, { icon: Lf.divIcon({ className: "price-pin-wrap", html, iconSize: undefined, iconAnchor: [0, 0] }), riseOnHover: true })
+    pin: (p, html, onClick, front) =>
+      Lf.marker(p, { icon: Lf.divIcon({ className: "price-pin-wrap", html, iconSize: undefined, iconAnchor: [0, 0] }), riseOnHover: true, zIndexOffset: front ? 10000 : 0 })
         .on("click", onClick)
         .addTo(pins),
     dot: (p, color, onClick) =>
@@ -100,9 +101,9 @@ async function createKakao(el: HTMLElement, center: LatLng, zoom: number): Promi
   let pins: any[] = [];
   let circles: any[] = [];
 
-  const overlay = (p: LatLng, node: HTMLElement, onClick: () => void) => {
+  const overlay = (p: LatLng, node: HTMLElement, onClick: () => void, front = false) => {
     node.addEventListener("click", onClick);
-    const o = new km.CustomOverlay({ position: new km.LatLng(p[0], p[1]), content: node, xAnchor: 0, yAnchor: 0, clickable: true });
+    const o = new km.CustomOverlay({ position: new km.LatLng(p[0], p[1]), content: node, xAnchor: 0, yAnchor: 0, clickable: true, zIndex: front ? 10 : 1 });
     o.setMap(m);
     pins.push(o);
   };
@@ -133,11 +134,11 @@ async function createKakao(el: HTMLElement, center: LatLng, zoom: number): Promi
       pins.forEach((o) => o.setMap(null));
       pins = [];
     },
-    pin: (p, html, onClick) => {
+    pin: (p, html, onClick, front) => {
       const node = document.createElement("div");
       node.className = "price-pin-wrap";
       node.innerHTML = html;
-      overlay(p, node, onClick);
+      overlay(p, node, onClick, front);
     },
     dot: (p, color, onClick) => {
       const node = document.createElement("div");

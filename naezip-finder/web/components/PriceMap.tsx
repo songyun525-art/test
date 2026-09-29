@@ -6,7 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createMapEngine, type LatLng, type MapEngine } from "@/lib/mapEngine";
 import { complexes, hojaeList, IS_SAMPLE, regions, type Complex, householdsText } from "@/lib/data";
 import { bucketOf, formatEok, pct, totalScore, type Bucket, chgClass } from "@/lib/score";
-import { AddToCompare } from "./CompareTray";
+import { AddToCompare, useCompareSlots } from "./CompareTray";
 import { useRegion } from "@/lib/region";
 
 // 가격대별 색 (말풍선 테두리·점)
@@ -45,6 +45,26 @@ export default function PriceMap() {
   const [visible, setVisible] = useState(0);
   const [tick, setTick] = useState(0); // 지도 이동·확대 때 다시 그리기
   const [ready, setReady] = useState(false);
+  const slots = useCompareSlots();
+
+  // 비교함에 담은 단지: 필터와 상관없이 번호 핀으로 항상 보여 줍니다.
+  const compared: Item[] = useMemo(
+    () =>
+      slots.flatMap((s) => {
+        const c = complexes.find((x) => x.id === s.id);
+        const z = c?.sizes.find((v) => v.area === s.area) ?? c?.sizes[0];
+        return c && z ? [{ c, area: z.area, pyeong: z.pyeong, price: s.customPrice ?? z.price }] : [];
+      }),
+    [slots],
+  );
+  const fitCompared = () => {
+    const m = map.current;
+    if (!m || !compared.length) return;
+    if (compared.length === 1) m.setView([compared[0].c.lat, compared[0].c.lng], 15);
+    else m.fit(compared.map((x) => [x.c.lat, x.c.lng] as LatLng), 15, 70);
+    setTick((t) => t + 1);
+  };
+  const firstFit = useRef(true);
 
   const items: Item[] = useMemo(
     () =>
@@ -81,6 +101,13 @@ export default function PriceMap() {
   useEffect(() => {
     const m = map.current;
     if (!m) return;
+    // 처음 열 때 비교함에 단지가 있으면 그 단지들이 한눈에 보이게
+    if (firstFit.current && compared.length) {
+      firstFit.current = false;
+      fitCompared();
+      return;
+    }
+    firstFit.current = false;
     if (!items.length) {
       const [lat, lng, z] = CITY_CENTER["경기도 전체"];
       m.setView([lat, lng], z);
@@ -102,7 +129,9 @@ export default function PriceMap() {
     setVisible(inView.length);
     // 화면 안 단지가 많으면 점으로, 적거나 충분히 확대하면 가격 말풍선으로
     const detailed = inView.length <= 200 || zoom >= 15;
+    const comparedIds = new Set(compared.map((x) => x.c.id));
     for (const x of inView) {
+      if (comparedIds.has(x.c.id)) continue;
       const color = bandColor(x.price);
       const p: LatLng = [x.c.lat, x.c.lng];
       if (detailed) {
@@ -112,7 +141,11 @@ export default function PriceMap() {
         m.dot(p, color, () => setSelected(x));
       }
     }
-  }, [items, tick, selected]);
+    compared.forEach((x, i) => {
+      const html = `<div class="cmp-pin${selected?.c.id === x.c.id ? " on" : ""}"><i>${i + 1}</i><div><b>${escapeHtml(x.c.name)}</b><span>${formatEok(x.price)} · ${x.area}㎡</span></div></div>`;
+      m.pin([x.c.lat, x.c.lng], html, () => setSelected(x), true);
+    });
+  }, [items, tick, selected, compared]);
 
   // 호재 반경 3km
   useEffect(() => {
@@ -145,6 +178,9 @@ export default function PriceMap() {
           {regions.map((r) => <option key={r}>{r}</option>)}
         </select>
         <label className="check"><input type="checkbox" checked={showHojae} onChange={(e) => setShowHojae(e.target.checked)} /> 호재 반경</label>
+        {compared.length > 0 && (
+          <button type="button" className="pm-compare" onClick={fitCompared}>비교 단지 {compared.length}곳 보기</button>
+        )}
         <span className="pm-count">화면 안 {visible}개 단지</span>
       </div>
 
