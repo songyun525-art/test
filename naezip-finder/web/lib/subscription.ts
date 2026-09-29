@@ -45,15 +45,17 @@ export function daysUntil(date: string, today: string) {
   return Math.round((Date.parse(date) - Date.parse(today)) / 86400000);
 }
 
-// 가까운 기존 단지(5km 안)의 같은 평형 실거래 평균과 분양가 비교
+// 가까운 기존 단지(5km 안)의 같은 평형 실거래가와 분양가 비교.
+// 새 아파트와 견주도록 준공 10년 이내 단지를 먼저 쓰고, 없으면 연식과 상관없이 가까운 곳을 씁니다.
 export function marketCompare(s: Subscription, area: number) {
   if (s.lat === null || s.lng === null) return null;
   const bucket = bucketOf(area);
-  const near = complexes
+  const all = complexes
     .map((c) => ({ c, d: distanceKm(s.lat!, s.lng!, c.lat, c.lng), size: c.sizes.find((z) => bucketOf(z.area) === bucket) }))
     .filter((x) => x.size && x.d <= 5)
-    .sort((a, b) => a.d - b.d)
-    .slice(0, 3);
+    .sort((a, b) => a.d - b.d);
+  const recent = all.filter((x) => x.c.year >= 2016);
+  const near = (recent.length ? recent : all).slice(0, 3);
   if (!near.length) return null;
   const avg = near.reduce((t, x) => t + x.size!.price, 0) / near.length;
   return { avg, names: near.map((x) => x.c.name) };

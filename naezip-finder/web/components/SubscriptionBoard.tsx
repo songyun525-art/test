@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { regions } from "@/lib/data";
 import { formatEok } from "@/lib/score";
 import { DATA_FETCHED_AT, daysUntil, gajeom, marketCompare, statusOf, subscriptions, type SubStatus } from "@/lib/subscription";
+import { IS_SAMPLE } from "@/lib/data";
 
-// 주변 시세 비교는 실제 단지 데이터가 들어오면 켭니다 (지금은 샘플 단지라 비교가 부정확해요).
-const SHOW_MARKET = false;
+// 주변 시세 비교는 실제 단지 데이터일 때만 보여 줍니다 (샘플 단지로는 비교가 부정확해요).
+const SHOW_MARKET = !IS_SAMPLE;
 
 const TABS: ("전체" | SubStatus)[] = ["전체", "접수 중", "접수 예정", "발표 대기", "발표 완료"];
 const STATUS_CLASS: Record<SubStatus, string> = { "접수 중": "st-live", "접수 예정": "st-soon", "발표 대기": "st-wait", "발표 완료": "st-done" };
