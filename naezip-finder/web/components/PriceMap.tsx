@@ -8,6 +8,7 @@ import { complexes, hojaeList, IS_SAMPLE, regions, type Complex, householdsText 
 import { bucketOf, formatEok, pct, totalScore, type Bucket, chgClass } from "@/lib/score";
 import { AddToCompare, useCompareSlots } from "./CompareTray";
 import { useRegion } from "@/lib/region";
+import { ComplexName } from "./ComplexDetail";
 
 // 가격대별 색 (말풍선 테두리·점)
 const BANDS = [
@@ -194,7 +195,7 @@ export default function PriceMap() {
       {selected && (
         <aside className="pm-card">
           <button className="pm-close" onClick={() => setSelected(null)} aria-label="닫기">×</button>
-          <h3>{selected.c.name}</h3>
+          <h3><ComplexName c={selected.c} area={selected.area} /></h3>
           <p className="tiny muted">{selected.c.city} {selected.c.district} · {selected.c.year}년{selected.c.households ? ` · ${householdsText(selected.c)}` : ""}</p>
           <div className="pm-sizes">
             {selected.c.sizes.map((s) => (

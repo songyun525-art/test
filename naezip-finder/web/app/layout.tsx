@@ -3,6 +3,7 @@ import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import CompareTray from "@/components/CompareTray";
+import DetailPanel from "@/components/ComplexDetail";
 
 export const metadata: Metadata = {
   title: "윤송이의 내집찾기",
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Sidebar />
           <main className="main">{children}</main>
           <CompareTray />
+          <DetailPanel />
         </div>
       </body>
     </html>
