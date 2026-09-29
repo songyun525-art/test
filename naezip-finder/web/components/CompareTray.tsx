@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { complexes } from "@/lib/data";
 import { addToCompare, MAX_COMPARE, onCompareChange, readCompare, removeFromCompare, type StoredSlot } from "@/lib/compareStore";
 
-function useCompareSlots() {
+export function useCompareSlots() {
   const [slots, setSlots] = useState<StoredSlot[]>([]);
   useEffect(() => {
     const sync = () => setSlots(readCompare()?.slots ?? []);
