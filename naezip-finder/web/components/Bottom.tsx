@@ -6,6 +6,8 @@ import BuildingArt from "./BuildingArt";
 import { hojaeList, type Complex, type Hojae } from "@/lib/data";
 import { complexesNear, formatEok, totalScore, type Recommendation, type Weights } from "@/lib/score";
 import { ComplexName } from "./ComplexDetail";
+import { hojaeDetail, GRADE_LABEL } from "@/lib/metrics/hojaeGrade";
+import { MetricBadge } from "./metrics/MetricBadge";
 
 export function Recommendations({
   base,
@@ -73,6 +75,18 @@ export function Recommendations({
   );
 }
 
+const GRADE_TONE = { S: "good", A: "good", B: "normal", C: "warn", D: "warn" } as const;
+
+/** 호재 확실성 등급 배지: "등급 S · 개통" */
+export function HojaeGradeBadge({ h }: { h: Hojae }) {
+  const d = hojaeDetail(h);
+  return (
+    <MetricBadge tone={GRADE_TONE[d.grade]} title={`확실성 등급 ${d.grade} = ${GRADE_LABEL[d.grade]}. S 개통/완공 · A 공사 중 · B 착공 예정 · C 계획 발표 · D 검토/구상`}>
+      등급 {d.grade} · {h.status}
+    </MetricBadge>
+  );
+}
+
 const TABS = ["전체", "GTX", "신규 노선", "정비·개발", "일자리"] as const;
 const BADGE_CLASS: Record<Hojae["category"], string> = { GTX: "b-purple", "신규 노선": "b-blue", "정비·개발": "b-green", 일자리: "b-orange" };
 
@@ -96,8 +110,11 @@ export function HojaePanel() {
           <li key={h.id}>
             <span className={`hbadge ${BADGE_CLASS[h.category]}`}>{h.badge}</span>
             <div>
-              <b>{h.title}</b> <span className="muted">({h.status})</span>
-              <div className="tiny muted">{h.detail}</div>
+              <b>{h.title}</b> <HojaeGradeBadge h={h} />
+              <div className="tiny muted">
+                {h.detail}
+                {hojaeDetail(h).caution && <span className="caution"> · {hojaeDetail(h).caution}</span>}
+              </div>
             </div>
             <span className="tiny muted near">반경 3km 내<br />+{complexesNear(h).length}개 단지</span>
           </li>
@@ -106,7 +123,7 @@ export function HojaePanel() {
       {filtered.length > 7 && (
         <button className="link-btn" onClick={() => setAll(!all)}>{all ? "접기" : `${filtered.length - 7}개 더 보기`}</button>
       )}
-      <p className="tiny muted">공개된 계획을 정리한 목록이에요. 개통·완공 시기는 바뀔 수 있어요.</p>
+      <p className="tiny muted">공개된 계획을 정리한 목록이에요. 개통·완공 시기는 바뀔 수 있어요. 등급: S 개통/완공 · A 공사 중 · B 착공 예정 · C 계획 발표 · D 검토/구상</p>
     </section>
   );
 }

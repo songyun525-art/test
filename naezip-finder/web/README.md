@@ -49,7 +49,7 @@ npm run dev      # http://localhost:3000
 | 1 ✅ | 거래 신뢰도 (3개월 5건↑ 높음 / 1~4건 보통 / 6·12개월로 넓힘 낮음) | `trust.ts` | `TrustLine` — 기준가 아래, 상세 비교표 |
 | 1 ✅ | 고점 대비 하락률 · 회복률 (10년 분기 중위가 최고치 기준) | `recovery.ts` | `PeakRecoveryCard` — 가격 추이 아래, 상세 비교표 |
 | 2 ✅ | 입주물량 리스크 (반경 3km 3년 1,000/5,000세대 기준), 리스크 요약 | `supply.ts`, `risk.ts` | 상세 비교표 입주물량 행, `RiskSummaryCard` — 상세 비교표 위 |
-| 3 | 자금 부담 계산, 호재 확실성 등급, 점수 기준 토글 | `funding.ts`, `hojaeGrade.ts`, `profiles.ts` | (예정) `FundingCard`, `HojaeGradeCard`, `ScoreProfileToggle` |
+| 3 ✅ | 자금 부담 계산, 호재 확실성 등급(S~D), 점수 기준 토글(기존·기본형·실거주형·투자형) | `funding.ts`, `hojaeGrade.ts`, `profiles.ts` | `FundingCard` — 주의 리스크 위, 호재 목록 등급 배지, 종합 비교 결과의 점수 기준 버튼 |
 
 타입은 모두 `lib/metrics/types.ts`에 있습니다. 입주 예정 단지는 `scripts/fetch-supply.py`가 청약홈 분양정보에서 모아 `lib/supply.json`에 씁니다 (일반분양 세대수라 조합원·임대 물량은 빠짐). 거래 신뢰도·10년 최고가는 `scripts/export-complexes.py`가 수집 DB에서 뽑아 `lib/complexes.json`에 넣습니다.
 
