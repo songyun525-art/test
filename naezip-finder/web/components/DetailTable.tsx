@@ -4,7 +4,8 @@ import { householdsText } from "@/lib/data";
 import { tradeTrust, dateText } from "@/lib/metrics/trust";
 import { jeonseMetrics, ratioText } from "@/lib/metrics/jeonse";
 import { peakRecovery } from "@/lib/metrics/recovery";
-import { MetricBadge, SampleTag } from "./metrics/MetricBadge";
+import { supplyOf, supplyRisk } from "@/lib/metrics/supply";
+import { InfoTip, MetricBadge, SampleTag } from "./metrics/MetricBadge";
 
 export type RowDef = { label: string; cell: (s: Slot) => React.ReactNode; best?: (s: Slot) => number };
 
@@ -24,6 +25,27 @@ export const ROWS: RowDef[] = [
       return list.length ? list.map((h) => h.title).join(", ") : "없음";
     },
     best: (s) => nearbyHojae(s.complex).length,
+  },
+  {
+    label: "입주물량 (3년)",
+    cell: (s) => {
+      const r = supplyRisk(supplyOf(s.complex));
+      if (r.status === "missing") return <span className="muted">{r.label}</span>;
+      const top = r.data.nearby.slice(0, 3).map((n) => `${n.name} ${n.households.toLocaleString()}세대 (${n.moveIn.replace("-", ".")})`).join("\n");
+      return (
+        <>
+          <MetricBadge tone={r.tone}>리스크 {r.level}</MetricBadge> 반경 3km {r.data.within3km3y.toLocaleString()}세대
+          {top && <InfoTip text={top} />}
+          <div className="tiny muted">
+            1년 안 {r.data.within3km1y.toLocaleString()}세대 · {s.complex.city} 전체 {r.data.sgg3y.toLocaleString()}세대
+          </div>
+        </>
+      );
+    },
+    best: (s) => {
+      const d = supplyOf(s.complex);
+      return d ? -d.within3km3y : -Infinity;
+    },
   },
   { label: "현재 실거래가", cell: (s) => formatEok(slotSize(s).price) },
   {
