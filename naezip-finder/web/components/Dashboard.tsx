@@ -128,13 +128,11 @@ export default function Dashboard() {
           <MapPanel slots={slots} recs={recs} region={region} onRegion={setRegion} />
           {slots.length > 0 ? (
             <>
-              <div className="stack">
-                <ScorePanel slots={slots} weights={weights} onWeights={setWeights} />
-                <MetricsTable slots={slots} />
-              </div>
+              <ScorePanel slots={slots} weights={weights} onWeights={setWeights} />
               <div className="stack">
                 <PriceChart slots={slots} />
                 <PeakRecoveryCard slots={slots} />
+                <MetricsTable slots={slots} />
               </div>
               <DetailTable slots={slots} />
             </>
