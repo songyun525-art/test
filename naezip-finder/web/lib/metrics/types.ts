@@ -75,7 +75,11 @@ export type SupplyData = {
   within3km3y: number; // 반경 3km, 3년 안
   sgg3y: number; // 시군구 전체, 3년 안
   asOf: string;
+  nearby: SupplySite[]; // 반경 3km 안 입주 예정 단지 (세대수 많은 순)
 };
+
+/** 입주 예정 단지 한 곳 (lib/supply.json, scripts/fetch-supply.py) */
+export type SupplySite = { name: string; households: number; moveIn: string; km: number };
 
 export type SupplyRiskLevel = "낮음" | "보통" | "높음";
 
