@@ -7,13 +7,14 @@ import BuildingArt from "./BuildingArt";
 import { complexes, regions, householdsText } from "@/lib/data";
 import { bucketOf, formatEok, pct, totalScore, type Bucket, chgClass, orLow } from "@/lib/score";
 import { AddToCompare } from "./CompareTray";
+import { useRegion } from "@/lib/region";
 
 type Sort = "종합점수" | "가격 낮은 순" | "1년 상승률";
 
 export default function FindHomes({ initialBudget }: { initialBudget: number }) {
   const [budget, setBudget] = useState(initialBudget);
   const [size, setSize] = useState<"전체" | Bucket>("84");
-  const [region, setRegion] = useState("경기도 전체");
+  const [region, setRegion] = useRegion();
   const [sort, setSort] = useState<Sort>("종합점수");
   const [shown, setShown] = useState(30);
 

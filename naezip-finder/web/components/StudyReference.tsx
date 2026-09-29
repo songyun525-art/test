@@ -5,6 +5,7 @@ import { useState } from "react";
 import { cities, complexes, IS_SAMPLE, type Complex, householdsText } from "@/lib/data";
 import { bucketOf, formatEok, pct } from "@/lib/score";
 import { AddToCompare } from "./CompareTray";
+import { useRegion } from "@/lib/region";
 
 const TABS = ["시별 대장아파트", "1년 상승 TOP", "1년 하락 TOP", "거래 활발 TOP"] as const;
 type Tab = (typeof TABS)[number];
@@ -22,7 +23,7 @@ const trades = (c: Complex) => c.sizes.reduce((s, z) => s + z.trades, 0);
 
 export default function StudyReference() {
   const [tab, setTab] = useState<Tab>("시별 대장아파트");
-  const [city, setCity] = useState("경기도 전체");
+  const [city, setCity] = useRegion();
   const pool = complexes.filter((c) => city === "경기도 전체" || c.city === city);
 
   let rows: { c: Complex; value: React.ReactNode; sub?: string }[] = [];
