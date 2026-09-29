@@ -108,7 +108,13 @@ def main() -> None:
 
     def job(t: tuple[str, str]) -> int:
         s, ym = t
-        items = fetch_month(s, ym)
+        try:
+            items = fetch_month(s, ym)
+        except ApiError as e:
+            if "활용신청" in str(e):
+                raise
+            print(f"  실패 {s} {ym}: {e}", flush=True)  # 다시 실행하면 이어서 받습니다
+            return -1
         path = a.out / s / f"{ym}.json"
         path.parent.mkdir(parents=True, exist_ok=True)
         tmp = path.with_suffix(".tmp")
@@ -116,13 +122,18 @@ def main() -> None:
         tmp.replace(path)
         return len(items)
 
-    total = 0
+    total = failed = 0
     with ThreadPoolExecutor(a.workers) as pool:
         for i, n in enumerate(pool.map(job, todo), 1):
-            total += n
+            if n < 0:
+                failed += 1
+            else:
+                total += n
             if i % 50 == 0:
                 print(f"  {i:,}/{len(todo):,} ({total:,}건)", flush=True)
-    print(f"완료: {total:,}건")
+    print(f"완료: {total:,}건" + (f", 실패 {failed}개 달 (다시 실행하세요)" if failed else ""))
+    if failed:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

@@ -249,8 +249,10 @@ def jeonse_stats(rent_dir: Path) -> dict[tuple[str, str], tuple[float, float | N
                 continue
             if rent or not deposit or not area:
                 continue
-            seq = t.get("aptSeq") or f"{t.get('sggCd', '')}|{t.get('umdNm', '')}|{t.get('jibun', '')}|{norm_name(t.get('aptNm', ''))}"
-            deals.setdefault((seq, bucket_of(area)), []).append((f"{y:04d}-{m:02d}-{d:02d}", deposit, deposit / area))
+            # 매매 DB의 apt_seq 와 같은 대체 키 (매매 API 자료에는 aptSeq 가 없어 전월세의 aptSeq 는 쓰지 않습니다)
+            seq = f"{t.get('sggCd', '')}|{t.get('umdNm', '')}|{t.get('jibun', '')}|{norm_name(t.get('aptNm', ''))}"
+            for key in (seq, seq.rsplit("|", 1)[0]):
+                deals.setdefault((key, bucket_of(area)), []).append((f"{y:04d}-{m:02d}-{d:02d}", deposit, deposit / area))
     this_month = date(TODAY.year, TODAY.month, 1)
     out = {}
     for key, ds in deals.items():
@@ -284,7 +286,8 @@ def run_export(db: Path, cache_path: Path, rent_dir: Path | None = None) -> None
         for s in sorted(c["stats"], key=lambda s: s["area"]):
             area = math.floor(s["area"])
             pk = peak.get((seq, s["bucket"]))
-            js = jeonse.get((seq, s["bucket"]))
+            # 단지명 표기가 매매와 다르면 같은 시군구·동·지번으로 찾습니다.
+            js = jeonse.get((seq, s["bucket"])) or jeonse.get((seq.rsplit("|", 1)[0], s["bucket"]))
             # [면적, 평, 기준가, 3개월 건수, 기준가 산정 기간(개월), 그 기간 건수, 마지막 거래일,
             #  10년 최고가, 최고가 분기, 전세가, 전세 1년 상승률, 전세 건수] — lib/data.ts 의 SizeRow 와 같은 순서
             sizes.append([
