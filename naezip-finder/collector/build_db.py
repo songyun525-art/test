@@ -72,8 +72,9 @@ def norm_name(name: str) -> str:
 
 def to_int(s, default=None):
     try:
-        return int(str(s).replace(",", "").strip())
-    except (TypeError, ValueError):
+        # K-apt는 세대수 같은 값을 "1474.0"처럼 준다.
+        return int(float(str(s).replace(",", "").strip()))
+    except (TypeError, ValueError, OverflowError):
         return default
 
 

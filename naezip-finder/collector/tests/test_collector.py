@@ -5,7 +5,7 @@ from datetime import date
 
 import pytest
 
-from collector.build_db import bucket_of, build, match_complexes, norm_name, parse_trade
+from collector.build_db import bucket_of, build, match_complexes, norm_name, parse_trade, to_int
 from collector.common import parse_response
 from collector.fetch_trades import months_back
 
@@ -107,3 +107,9 @@ def test_match_eup_myeon_ri():
                   "addr": "경기도 안성시 공도읍 용두리 752 공도주은풍림"}]
     trades = [{"apt_seq": "s1", "sgg_cd": "41550", "umd_nm": "공도읍 용두리", "apt_nm": "주은풍림", "jibun": "752"}]
     assert match_complexes(trades, complexes) == {"s1": "A1"}
+
+
+def test_to_int_accepts_float_strings():
+    assert to_int("1474.0") == 1474
+    assert to_int("41,000") == 41000
+    assert to_int(" ") is None
