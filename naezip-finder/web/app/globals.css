@@ -370,6 +370,9 @@ a { color: inherit; text-decoration: none; }
   .pm-card { top: auto; bottom: 64px; left: 12px; right: 12px; width: auto; }
 }
 
+.study-filters { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.study-count { margin: 0 0 6px; }
+
 /* 비교함 (다른 화면 아래에 떠 있음) */
 body:has(.tray-bar) .main { padding-bottom: 110px; }
 .compare-tray { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 900; display: flex; flex-direction: column; align-items: center; gap: 8px; width: min(760px, calc(100% - 24px)); pointer-events: none; }
