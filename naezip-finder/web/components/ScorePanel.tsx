@@ -3,7 +3,9 @@
 import { useState } from "react";
 import Icon from "./Icon";
 import { DEFAULT_WEIGHTS, SCORE_ITEMS, subScores, topPercent, totalScore, type ScoreKey, type Weights } from "@/lib/score";
-import { SLOT_COLORS, type Slot } from "./Compare";
+import { SLOT_COLORS, slotPrice, slotSize, type Slot } from "./Compare";
+import JeonseLine from "./metrics/JeonseLine";
+import { InfoTip } from "./metrics/MetricBadge";
 
 const ITEM_ICONS: Record<ScoreKey, string> = {
   location: "pin",
@@ -91,6 +93,15 @@ export default function ScorePanel({
                 </span>
               </div>
             ))}
+          </div>
+        ))}
+
+        <div className="row-label sub-label">
+          보조 지표 · 전세 <InfoTip text="전세가율 = 최근 전세가 ÷ 기준가. 70% 이상이면 실수요가 탄탄한 편, 50% 미만이면 매매가에 기대 수요가 많이 반영된 편입니다. 종합 점수에는 아직 넣지 않았습니다." />
+        </div>
+        {slots.map((s) => (
+          <div key={s.complex.id} className="sub-cell">
+            <JeonseLine size={slotSize(s)} price={slotPrice(s)} />
           </div>
         ))}
       </div>

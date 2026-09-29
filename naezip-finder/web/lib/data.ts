@@ -1,12 +1,18 @@
 // 단지 데이터: scripts/export-complexes.py 가 만든 lib/complexes.json (국토부 실거래가·단지 정보, 카카오 로컬)이
 // 있으면 그것을 쓰고, 비어 있으면 아래 샘플을 씁니다. 가격 단위는 억 원입니다.
 import real from "./complexes.json";
+import type { JeonseData, PeakData } from "./metrics/types";
 
 export type SizeOption = {
   area: number; // 전용면적 (㎡). 화면에서는 59/84/기타 버킷으로 묶습니다.
   pyeong: number;
   price: number; // 기준가 = 최근 3개월 실거래 평균 (억)
   trades: number; // 최근 3개월 거래 건수
+  refMonths: number; // 기준가 산정 기간 (3/6/12개월). 3개월에 거래가 없으면 6·12개월로 넓힙니다.
+  refCount: number; // 산정 기간 안 거래 건수
+  lastDeal: string; // 마지막 거래일 "2026-09-22" ("" = 모름)
+  peak: PeakData | null; // 최근 10년 최고가
+  jeonse: JeonseData | null; // 최근 전세 (null = 전세 데이터 부족)
 };
 
 export type Complex = {
@@ -49,7 +55,15 @@ export const DATA_AS_OF = IS_SAMPLE ? "2026.09" : String(REAL.asOf).slice(0, 7).
 type Row = [
   id: string, name: string, city: string, district: string, year: number, households: number, far: number,
   lat: number, lng: number, stationMeters: number, schoolMeters: number, gangnamMinutes: number,
-  growth: [number | null, number | null, number | null, number | null], sizes: [number, number, number, number][], art: number,
+  growth: [number | null, number | null, number | null, number | null], sizes: SizeRow[], art: number,
+];
+
+/** scripts/export-complexes.py 가 쓰는 평형 한 줄. 예전 JSON(앞 4칸만)도 읽을 수 있게 뒤쪽은 선택입니다. */
+type SizeRow = [
+  area: number, pyeong: number, price: number, trades: number,
+  refMonths?: number, refCount?: number, lastDeal?: string,
+  peakPrice?: number | null, peakQuarter?: string | null,
+  jeonsePrice?: number | null, jeonseY1?: number | null, jeonseCount?: number,
 ];
 
 const ROWS: Row[] = [
@@ -79,11 +93,44 @@ const ROWS: Row[] = [
 /** 세대수 표시 (정보 없으면 빈 문자열) */
 export const householdsText = (c: { households: number }) => (c.households ? `${c.households.toLocaleString()}세대` : "");
 
+/** 전세 실거래가 한 건도 없으면(전월세 API 연결 전) 화면 확인용 예시 전세를 만듭니다. */
+export const JEONSE_IS_SAMPLE = !(IS_SAMPLE ? [] : REAL_ROWS).some((r) => r[13].some((z) => z[9] != null));
+
+// 단지·평형마다 늘 같은 값이 나오는 0~1 사이 수
+function hash01(key: string) {
+  let h = 2166136261;
+  for (let i = 0; i < key.length; i++) h = Math.imul(h ^ key.charCodeAt(i), 16777619);
+  return ((h >>> 0) % 10000) / 10000;
+}
+
+function sampleJeonse(id: string, area: number, price: number): JeonseData | null {
+  const r = hash01(`${id}:${area}:jeonse`);
+  if (r < 0.08) return null; // 일부 단지는 "전세 데이터 부족"으로 보이게
+  const ratio = 0.46 + r * 0.34; // 전세가율 46~80%
+  return { price: Math.round(price * ratio * 100) / 100, y1: Math.round((hash01(`${id}:${area}:y1`) * 0.16 - 0.05) * 1000) / 1000, count: 1 + Math.floor(r * 12), isSample: true };
+}
+
+function toSize(id: string, [area, pyeong, price, trades, refMonths, refCount, lastDeal, peakPrice, peakQuarter, jPrice, jY1, jCount]: SizeRow): SizeOption {
+  return {
+    area, pyeong, price, trades,
+    // 예전 JSON·샘플: 3개월 건수만 있으므로 거래가 없으면 12개월 기준으로 봅니다.
+    refMonths: refMonths ?? (trades ? 3 : 12),
+    refCount: refCount ?? (trades || 1),
+    lastDeal: lastDeal ?? "",
+    peak: peakPrice ? { price: peakPrice, quarter: peakQuarter ?? "" } : null,
+    jeonse: JEONSE_IS_SAMPLE
+      ? sampleJeonse(id, area, price)
+      : jPrice
+        ? { price: jPrice, y1: jY1 ?? NaN, count: jCount ?? 0, isSample: false }
+        : null,
+  };
+}
+
 export const complexes: Complex[] = (IS_SAMPLE ? ROWS : REAL_ROWS).map(
   ([id, name, city, district, year, households, far, lat, lng, stationMeters, schoolMeters, gangnamMinutes, g, sizes, art]) => ({
     id, name, city, district, year, households, far, lat, lng, stationMeters, schoolMeters, gangnamMinutes,
     growth: { y1: g[0] ?? NaN, y3: g[1] ?? NaN, y5: g[2] ?? NaN, y10: g[3] ?? NaN },
-    sizes: sizes.map(([area, pyeong, price, trades]) => ({ area, pyeong, price, trades })),
+    sizes: sizes.map((z) => toSize(id, z)),
     art,
   }),
 );

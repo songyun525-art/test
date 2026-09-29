@@ -3,17 +3,21 @@
 1. geo   : 단지마다 카카오 로컬 API로 좌표, 가장 가까운 지하철역·초등학교 거리를 구해
            캐시 파일(--cache)에 쌓습니다. 이미 구한 단지는 건너뛰므로 여러 번 나눠 돌려도 됩니다.
 2. export: DB 통계와 캐시를 합쳐 lib/complexes.json 을 씁니다.
+           평형마다 기준가 산정 기간·건수·마지막 거래일(거래 신뢰도), 10년 최고가(분기 중위가 기준),
+           전세 원자료(--rents, scripts/fetch-rents.py 로 받음)가 있으면 최근 전세가·1년 상승률도 넣습니다.
 
 실행:
     NODE 없이 python3 만 있으면 됩니다. 키는 환경변수 KAKAO_REST_KEY 로만 받습니다.
     python3 scripts/export-complexes.py geo    --db ../data/naezip.sqlite --cache ../data/web/geo.json
-    python3 scripts/export-complexes.py export --db ../data/naezip.sqlite --cache ../data/web/geo.json
+    python3 scripts/export-complexes.py export --db ../data/naezip.sqlite --cache ../data/web/geo.json \
+        [--rents ../data/raw/rents]
 """
 import argparse
 import hashlib
 import json
 import math
 import os
+import re
 import sqlite3
 import sys
 import time
@@ -21,6 +25,7 @@ import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date
+from statistics import median
 from pathlib import Path
 
 OUT = Path(__file__).resolve().parent.parent / "lib" / "complexes.json"
@@ -177,8 +182,93 @@ def km(a, b):
     return 2 * r * math.asin(math.sqrt(h))
 
 
-def run_export(db: Path, cache_path: Path) -> None:
+# 전용면적(㎡) → 평형 버킷. 수집기 collector/build_db.py 의 BUCKETS 와 같습니다.
+BUCKETS = [(0, 49, "소형"), (49, 66, "59"), (66, 76, "74"), (76, 90, "84"), (90, 1000, "대형")]
+
+
+def bucket_of(area: float) -> str:
+    return next((name for lo, hi, name in BUCKETS if lo <= area < hi), "대형")
+
+
+def shift_months(d: date, months: int) -> date:
+    y, m = divmod(d.year * 12 + d.month - 1 - months, 12)
+    return date(y, m + 1, 1)
+
+
+def window_median(deals: list[tuple[str, float]], end: date) -> tuple[float | None, int]:
+    """end 달까지 3개월 창에서 값이 없으면 6, 12개월로 넓힙니다. (중위값, 건수) — 수집기와 같은 규칙."""
+    stop = shift_months(end, -1).isoformat()
+    for months in (3, 6, 12):
+        start = shift_months(end, months - 1).isoformat()
+        vals = [v for dt, v in deals if start <= dt < stop]
+        if vals:
+            return median(vals), len(vals)
+    return None, 0
+
+
+def peaks(conn: sqlite3.Connection) -> dict[tuple[str, str], tuple[float, str]]:
+    """평형별 최근 10년 최고가: 분기 중위가 중 가장 높은 값 (억, "2021-3" 분기).
+
+    한 건짜리 이상 거래에 끌려가지 않도록 거래가 2건 이상인 분기만 보고, 그런 분기가 없으면 전체 분기에서 고릅니다.
+    """
+    since = date(TODAY.year - 10, TODAY.month, 1).isoformat()
+    groups: dict[tuple[str, str], dict[str, list[int]]] = {}
+    for seq, bucket, price, dt in conn.execute(
+        "SELECT apt_seq, bucket, price, deal_date FROM trades WHERE direct = 0 AND deal_date >= ?", (since,)
+    ):
+        q = f"{dt[:4]}-{(int(dt[5:7]) - 1) // 3 + 1}"
+        groups.setdefault((seq, bucket), {}).setdefault(q, []).append(price)
+    out = {}
+    for key, quarters in groups.items():
+        solid = {q: v for q, v in quarters.items() if len(v) >= 2} or quarters
+        q, vals = max(solid.items(), key=lambda kv: (median(kv[1]), kv[0]))
+        out[key] = (round(median(vals) / 10000, 2), q)
+    return out
+
+
+def norm_name(name: str) -> str:
+    """수집기 collector/build_db.py 의 norm_name 과 같습니다 (aptSeq 가 없는 자료의 대체 키)."""
+    n = re.sub(r"\(.*?\)", "", name or "")
+    n = re.sub(r"[\s·\-_.,]", "", n)
+    n = re.sub(r"(아파트|apt|APT)$", "", n)
+    return n.lower()
+
+
+def jeonse_stats(rent_dir: Path) -> dict[tuple[str, str], tuple[float, float | None, int]]:
+    """전월세 원자료(raw/rents/<시군구>/<YYYYMM>.json)에서 평형별 순수 전세(월세 0)만 골라
+    (최근 전세 중위가 억, 1년 상승률, 건수)를 돌려줍니다. 기준가와 같은 3→6→12개월 창을 씁니다."""
+    deals: dict[tuple[str, str], list[tuple[str, float, float]]] = {}
+    for f in sorted(rent_dir.glob("*/*.json")):
+        for t in json.loads(f.read_text()):
+            try:
+                deposit = int(str(t.get("deposit", "")).replace(",", ""))
+                rent = int(str(t.get("monthlyRent") or "0").replace(",", ""))
+                area = float(t.get("excluUseAr") or 0)
+                y, m, d = int(t["dealYear"]), int(t["dealMonth"]), int(t.get("dealDay") or 1)
+            except (KeyError, ValueError):
+                continue
+            if rent or not deposit or not area:
+                continue
+            seq = t.get("aptSeq") or f"{t.get('sggCd', '')}|{t.get('umdNm', '')}|{t.get('jibun', '')}|{norm_name(t.get('aptNm', ''))}"
+            deals.setdefault((seq, bucket_of(area)), []).append((f"{y:04d}-{m:02d}-{d:02d}", deposit, deposit / area))
+    this_month = date(TODAY.year, TODAY.month, 1)
+    out = {}
+    for key, ds in deals.items():
+        now, n = window_median([(dt, v) for dt, v, _ in ds], this_month)
+        if now is None:
+            continue
+        per_now, _ = window_median([(dt, v) for dt, _, v in ds], this_month)
+        per_past, _ = window_median([(dt, v) for dt, _, v in ds], shift_months(this_month, 12))
+        g = round(per_now / per_past - 1, 3) if per_now and per_past else None
+        out[key] = (round(now / 10000, 2), g, n)
+    return out
+
+
+def run_export(db: Path, cache_path: Path, rent_dir: Path | None = None) -> None:
     cache = json.loads(cache_path.read_text()) if cache_path.exists() else {}
+    peak = peaks(sqlite3.connect(db))
+    jeonse = jeonse_stats(rent_dir) if rent_dir else {}
+    print(f"10년 최고가 {len(peak):,}개 평형, 전세 {len(jeonse):,}개 평형")
     rows = []
     for seq, c in db_complexes(db).items():
         geo = cache.get(seq)
@@ -193,7 +283,16 @@ def run_export(db: Path, cache_path: Path) -> None:
         sizes = []
         for s in sorted(c["stats"], key=lambda s: s["area"]):
             area = math.floor(s["area"])
-            sizes.append([area, round(area * 1.33 / 3.3058), round(s["ref_price"] / 10000, 2), s["ref_count"] if s["ref_months"] == 3 else 0])
+            pk = peak.get((seq, s["bucket"]))
+            js = jeonse.get((seq, s["bucket"]))
+            # [면적, 평, 기준가, 3개월 건수, 기준가 산정 기간(개월), 그 기간 건수, 마지막 거래일,
+            #  10년 최고가, 최고가 분기, 전세가, 전세 1년 상승률, 전세 건수] — lib/data.ts 의 SizeRow 와 같은 순서
+            sizes.append([
+                area, round(area * 1.33 / 3.3058), round(s["ref_price"] / 10000, 2), s["ref_count"] if s["ref_months"] == 3 else 0,
+                s["ref_months"], s["ref_count"], s["last_deal"],
+                pk[0] if pk else None, pk[1] if pk else None,
+                js[0] if js else None, js[1] if js else None, js[2] if js else 0,
+            ])
         # 강남역 대중교통 시간은 직선거리로 어림합니다 (역이 멀면 가산).
         commute = round(min(120, 12 + km((geo["lat"], geo["lng"]), GANGNAM) * 2.1 + max(0, geo["station"] - 800) / 80))
         rid = hashlib.md5(seq.encode()).hexdigest()[:10]
@@ -213,10 +312,11 @@ def main() -> None:
     p.add_argument("--cache", type=Path, required=True)
     p.add_argument("--workers", type=int, default=6)
     p.add_argument("--kapt-info", type=Path, help="K-apt 단지 상세 원자료 폴더 (raw/complexes/info)")
+    p.add_argument("--rents", type=Path, help="전월세 원자료 폴더 (scripts/fetch-rents.py 결과, raw/rents)")
     a = p.parse_args()
     global KAPT_INFO
     KAPT_INFO = a.kapt_info
-    run_geo(a.db, a.cache, a.workers) if a.stage == "geo" else run_export(a.db, a.cache)
+    run_geo(a.db, a.cache, a.workers) if a.stage == "geo" else run_export(a.db, a.cache, a.rents)
 
 
 if __name__ == "__main__":

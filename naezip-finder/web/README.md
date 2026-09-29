@@ -39,6 +39,27 @@ npm run dev      # http://localhost:3000
 - 항목별 점수 설명에서 가중치 조절
 - 지도 확대·축소, 리스트 보기, 호재 탭 필터, 차트에 마우스를 올리면 분기별 가격
 
+## 판단 지표 (전세·거래 신뢰도·고점 회복률)
+
+점수가 높은 단지만이 아니라 실제로 집을 볼 때의 판단 기준을 함께 보여 줍니다.
+
+| 단계 | 지표 | 계산 (`lib/metrics/`) | 화면 (`components/metrics/`) |
+|---|---|---|---|
+| 1 ✅ | 전세가율 · 매매-전세 갭 · 1년 전세 상승률 | `jeonse.ts` | `JeonseLine` — 비교 카드, 종합 비교 결과 보조 지표, 상세 비교표 |
+| 1 ✅ | 거래 신뢰도 (3개월 5건↑ 높음 / 1~4건 보통 / 6·12개월로 넓힘 낮음) | `trust.ts` | `TrustLine` — 기준가 아래, 상세 비교표 |
+| 1 ✅ | 고점 대비 하락률 · 회복률 (10년 분기 중위가 최고치 기준) | `recovery.ts` | `PeakRecoveryCard` — 가격 추이 아래, 상세 비교표 |
+| 2 | 입주물량 리스크, 리스크 요약 | `supply.ts`, `risk.ts` | (예정) `SupplyRiskRow`, `RiskSummaryCard` |
+| 3 | 자금 부담 계산, 호재 확실성 등급, 점수 기준 토글 | `funding.ts`, `hojaeGrade.ts`, `profiles.ts` | (예정) `FundingCard`, `HojaeGradeCard`, `ScoreProfileToggle` |
+
+타입은 모두 `lib/metrics/types.ts`에 있습니다. 거래 신뢰도·10년 최고가는 `scripts/export-complexes.py`가 수집 DB에서 뽑아 `lib/complexes.json`에 넣습니다.
+
+전세는 공공데이터포털 **국토교통부_아파트 전월세 실거래가 자료** 활용신청이 필요합니다. 신청 전에는 화면 확인용 예시 값이 `예시` 표시와 함께 나옵니다. 승인되면:
+
+```bash
+python3 scripts/fetch-rents.py --out ../data/raw/rents        # 최근 25개월 전월세 원자료
+python3 scripts/export-complexes.py export --db ... --cache ... --kapt-info ... --rents ../data/raw/rents
+```
+
 ## 다음 단계
 
 - 실제 수집 데이터 연결, 카카오맵으로 지도 교체

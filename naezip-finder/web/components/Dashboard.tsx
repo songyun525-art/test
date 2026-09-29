@@ -8,7 +8,8 @@ import DetailTable from "./DetailTable";
 import ScorePanel from "./ScorePanel";
 import { MetricsTable, PriceChart } from "./PriceChart";
 import { HojaePanel, Recommendations } from "./Bottom";
-import { complexes, type Complex, IS_SAMPLE, DATA_AS_OF } from "@/lib/data";
+import PeakRecoveryCard from "./metrics/PeakRecoveryCard";
+import { complexes, type Complex, IS_SAMPLE, DATA_AS_OF, JEONSE_IS_SAMPLE } from "@/lib/data";
 import { addToCompare, readCompare, writeCompare } from "@/lib/compareStore";
 import { DEFAULT_WEIGHTS, recommend, type Weights } from "@/lib/score";
 import { useRegion } from "@/lib/region";
@@ -127,10 +128,13 @@ export default function Dashboard() {
           <MapPanel slots={slots} recs={recs} region={region} onRegion={setRegion} />
           {slots.length > 0 ? (
             <>
-              <ScorePanel slots={slots} weights={weights} onWeights={setWeights} />
+              <div className="stack">
+                <ScorePanel slots={slots} weights={weights} onWeights={setWeights} />
+                <MetricsTable slots={slots} />
+              </div>
               <div className="stack">
                 <PriceChart slots={slots} />
-                <MetricsTable slots={slots} />
+                <PeakRecoveryCard slots={slots} />
               </div>
               <DetailTable slots={slots} />
             </>
@@ -152,6 +156,7 @@ export default function Dashboard() {
             ? "지금 보이는 숫자는 모두 화면 확인용 샘플입니다. "
             : `국토교통부 실거래가(${DATA_AS_OF} 기준)와 카카오 지도 정보로 계산했습니다. 강남역 이동 시간은 거리로 어림한 값입니다. `}
           기준가는 최근 3개월 실거래 중위가(거래가 없으면 6·12개월)이며, 호가를 직접 입력하면 그 값으로 추천을 다시 계산합니다.
+          {JEONSE_IS_SAMPLE && " 전세가·전세가율은 전월세 실거래 데이터를 연결하기 전 예시 값입니다."}
         </footer>
     </>
   );
