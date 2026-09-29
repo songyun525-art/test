@@ -5,6 +5,7 @@ import { regions } from "@/lib/data";
 import { formatEok } from "@/lib/score";
 import { DATA_FETCHED_AT, daysUntil, gajeom, marketCompare, statusOf, subscriptions, type SubStatus } from "@/lib/subscription";
 import { IS_SAMPLE } from "@/lib/data";
+import { useRegion } from "@/lib/region";
 
 // 주변 시세 비교는 실제 단지 데이터일 때만 보여 줍니다 (샘플 단지로는 비교가 부정확해요).
 const SHOW_MARKET = !IS_SAMPLE;
@@ -29,7 +30,7 @@ function Stepper({ label, value, unit, max, onChange, hint }: { label: string; v
 
 export default function SubscriptionBoard() {
   const [tab, setTab] = useState<(typeof TABS)[number]>("전체");
-  const [region, setRegion] = useState("경기도 전체");
+  const [region, setRegion] = useRegion();
   const [g, setG] = useState({ homelessYears: 5, dependents: 2, accountYears: 7 });
   const score = gajeom(g);
   // 서버에서 만든 화면은 수집일 기준, 브라우저에서는 오늘 날짜 기준으로 상태를 다시 계산합니다.

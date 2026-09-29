@@ -11,6 +11,7 @@ import { HojaePanel, Recommendations } from "./Bottom";
 import { complexes, type Complex, IS_SAMPLE, DATA_AS_OF } from "@/lib/data";
 import { addToCompare, readCompare, writeCompare } from "@/lib/compareStore";
 import { DEFAULT_WEIGHTS, recommend, type Weights } from "@/lib/score";
+import { useRegion } from "@/lib/region";
 
 const byId = (id: string) => complexes.find((c) => c.id === id)!;
 const size84 = (c: Complex) => c.sizes.find((z) => z.area >= 76 && z.area < 95);
@@ -48,7 +49,7 @@ function save(slots: Slot[], liked: Set<string>) {
 export default function Dashboard() {
   const [slots, setSlots] = useState<Slot[]>(INITIAL);
   const [liked, setLiked] = useState<Set<string>>(new Set(INITIAL.slice(0, 1).map((s) => s.complex.id)));
-  const [region, setRegion] = useState("경기도 전체");
+  const [region, setRegion] = useRegion();
   const [weights, setWeights] = useState<Weights>(DEFAULT_WEIGHTS);
   const [notice, setNotice] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);

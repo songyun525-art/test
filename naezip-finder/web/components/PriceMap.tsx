@@ -7,6 +7,7 @@ import { createMapEngine, type LatLng, type MapEngine } from "@/lib/mapEngine";
 import { complexes, hojaeList, IS_SAMPLE, regions, type Complex, householdsText } from "@/lib/data";
 import { bucketOf, formatEok, pct, totalScore, type Bucket, chgClass } from "@/lib/score";
 import { AddToCompare } from "./CompareTray";
+import { useRegion } from "@/lib/region";
 
 // 가격대별 색 (말풍선 테두리·점)
 const BANDS = [
@@ -38,7 +39,7 @@ export default function PriceMap() {
 
   const [size, setSize] = useState<"전체" | Bucket>("84");
   const [maxPrice, setMaxPrice] = useState(30);
-  const [region, setRegion] = useState("경기도 전체");
+  const [region, setRegion] = useRegion();
   const [showHojae, setShowHojae] = useState(false);
   const [selected, setSelected] = useState<Item | null>(null);
   const [visible, setVisible] = useState(0);
