@@ -53,7 +53,7 @@ npm run dev      # http://localhost:3000
 
 타입은 모두 `lib/metrics/types.ts`에 있습니다. 거래 신뢰도·10년 최고가는 `scripts/export-complexes.py`가 수집 DB에서 뽑아 `lib/complexes.json`에 넣습니다.
 
-전세는 공공데이터포털 **국토교통부_아파트 전월세 실거래가 자료** 활용신청이 필요합니다. 신청 전에는 화면 확인용 예시 값이 `예시` 표시와 함께 나옵니다. 승인되면:
+전세는 공공데이터포털 **국토교통부_아파트 전월세 실거래가 자료**(2026-09-29 승인)로 최근 3개월 순수 전세 중위가를 씁니다. 전세 원자료가 없으면 화면 확인용 예시 값이 `예시` 표시와 함께 나옵니다. 갱신:
 
 ```bash
 python3 scripts/fetch-rents.py --out ../data/raw/rents        # 최근 25개월 전월세 원자료
