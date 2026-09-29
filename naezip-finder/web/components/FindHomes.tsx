@@ -6,6 +6,7 @@ import SketchMap, { type MapPin } from "./SketchMap";
 import BuildingArt from "./BuildingArt";
 import { complexes, regions, householdsText } from "@/lib/data";
 import { bucketOf, formatEok, pct, totalScore, type Bucket, chgClass, orLow } from "@/lib/score";
+import { AddToCompare } from "./CompareTray";
 
 type Sort = "종합점수" | "가격 낮은 순" | "1년 상승률";
 
@@ -82,7 +83,7 @@ export default function FindHomes({ initialBudget }: { initialBudget: number }) 
                 <div className="home-price">
                   <b>{formatEok(x.s.price)}</b>
                   <span className="tiny muted">{budget - x.s.price < 0.05 ? "예산과 거의 같음" : `예산보다 ${formatEok(budget - x.s.price)} 여유`}</span>
-                  <Link className="link-btn" href={`/?compare=${x.c.id}:${x.s.area}`}>비교하기</Link>
+                  <AddToCompare id={x.c.id} area={x.s.area} />
                 </div>
               </li>
             ))}

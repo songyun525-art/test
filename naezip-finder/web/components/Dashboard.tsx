@@ -9,6 +9,7 @@ import ScorePanel from "./ScorePanel";
 import { MetricsTable, PriceChart } from "./PriceChart";
 import { HojaePanel, Recommendations } from "./Bottom";
 import { complexes, type Complex, IS_SAMPLE, DATA_AS_OF } from "@/lib/data";
+import { addToCompare, readCompare, writeCompare } from "@/lib/compareStore";
 import { DEFAULT_WEIGHTS, recommend, type Weights } from "@/lib/score";
 
 const byId = (id: string) => complexes.find((c) => c.id === id)!;
@@ -28,37 +29,20 @@ function initialSlots(): Slot[] {
 }
 const INITIAL = initialSlots();
 
-const STORE_KEY = "naezip.compare.v1";
-type Saved = { slots: Slot[]; liked: string[] };
-
-function loadSaved(): Saved | null {
-  try {
-    const raw = JSON.parse(localStorage.getItem(STORE_KEY) ?? "null") as
-      | { slots: { id: string; area: number; customPrice?: number }[]; liked: string[] }
-      | null;
-    if (!raw) return null;
-    const slots: Slot[] = [];
-    for (const s of raw.slots) {
-      const complex = complexes.find((c) => c.id === s.id);
-      if (!complex) continue; // 데이터가 바뀌어 없어진 단지는 건너뜁니다
-      const area = complex.sizes.some((z) => z.area === s.area) ? s.area : complex.sizes[0].area;
-      slots.push({ complex, area, customPrice: s.customPrice });
-    }
-    return { slots, liked: raw.liked ?? [] };
-  } catch {
-    return null;
-  }
+// 비교함(lib/compareStore)에 저장된 단지를 화면용 Slot으로 바꿉니다.
+function loadSaved(): { slots: Slot[]; liked: string[] } | null {
+  const raw = readCompare();
+  if (!raw) return null;
+  const slots = raw.slots.map((s) => {
+    const complex = byId(s.id);
+    const area = complex.sizes.some((z) => z.area === s.area) ? s.area : complex.sizes[0].area;
+    return { complex, area, customPrice: s.customPrice };
+  });
+  return { slots, liked: raw.liked };
 }
 
 function save(slots: Slot[], liked: Set<string>) {
-  try {
-    localStorage.setItem(
-      STORE_KEY,
-      JSON.stringify({ slots: slots.map((s) => ({ id: s.complex.id, area: s.area, customPrice: s.customPrice })), liked: [...liked] }),
-    );
-  } catch {
-    /* 저장이 막힌 브라우저에서는 이번 화면에서만 기억합니다 */
-  }
+  writeCompare({ slots: slots.map((s) => ({ id: s.complex.id, area: s.area, customPrice: s.customPrice })), liked: [...liked] });
 }
 
 export default function Dashboard() {
@@ -72,37 +56,32 @@ export default function Dashboard() {
   // 비교 칸과 관심 단지는 이 브라우저에 저장해 두고, 다른 화면에 다녀와도 그대로 이어서 씁니다.
   const [restored, setRestored] = useState(false);
   useEffect(() => {
-    const saved = loadSaved();
-    let next: Slot[] | null = saved?.slots ?? null;
-    if (saved) setLiked(new Set(saved.liked));
-
-    // 다른 화면에서 "비교하기"로 넘어온 단지 (?compare=id:면적)
+    // 예전 방식의 링크(?compare=id:면적)로 넘어온 단지도 비교함에 담습니다.
     const [id, area] = (new URLSearchParams(window.location.search).get("compare") ?? "").split(":");
     const c = complexes.find((x) => x.id === id);
     if (c) {
       const a = c.sizes.some((z) => z.area === Number(area)) ? Number(area) : c.sizes[0].area;
-      // 처음 넣는 거라면 예시 단지는 비우고 이 단지부터 채웁니다.
-      const base = next ?? [];
-      if (base.some((s) => s.complex.id === c.id)) {
-        next = base.map((s) => (s.complex.id === c.id ? { ...s, area: a } : s));
-        setNotice(`${c.name}은(는) 이미 비교 중이에요.`);
-      } else if (base.length < 3) {
-        next = [...base, { complex: c, area: a }];
-        setNotice(`${c.name}을(를) 비교에 넣었어요 (${next.length}/3).`);
-      } else {
-        // 3칸이 다 찼으면 가장 먼저 넣은 단지를 빼고 넣습니다.
-        next = [...base.slice(1), { complex: c, area: a }];
-        setNotice(`${base[0].complex.name} 대신 ${c.name}을(를) 넣었어요.`);
-      }
+      setNotice(addToCompare(c.id, a));
       setTimeout(() => setNotice(""), 3000);
       window.history.replaceState(null, "", window.location.pathname); // 새로고침해도 다시 넣지 않도록
     }
+    const saved = loadSaved();
+    const next: Slot[] | null = saved?.slots ?? null;
+    if (saved) setLiked(new Set(saved.liked));
     if (next) setSlots(next);
     setRestored(true);
   }, []);
 
+  // 예시 단지를 그대로 보고만 있으면 저장하지 않습니다 (다른 화면에서 처음 담을 때 예시가 섞이지 않도록).
+  const untouched = useRef<{ slots: Slot[]; liked: Set<string> } | null>(null);
   useEffect(() => {
-    if (restored) save(slots, liked);
+    if (!restored) return;
+    if (!untouched.current) {
+      untouched.current = { slots, liked };
+      if (readCompare()) save(slots, liked); // 이미 쓰던 비교함이면 그대로 맞춰 둡니다
+      return;
+    }
+    if (slots !== untouched.current.slots || liked !== untouched.current.liked) save(slots, liked);
   }, [slots, liked, restored]);
 
   const base = slots[0];
