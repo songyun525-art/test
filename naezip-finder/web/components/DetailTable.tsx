@@ -5,6 +5,7 @@ import { tradeTrust, dateText } from "@/lib/metrics/trust";
 import { jeonseMetrics, ratioText } from "@/lib/metrics/jeonse";
 import { peakRecovery } from "@/lib/metrics/recovery";
 import { supplyOf, supplyRisk } from "@/lib/metrics/supply";
+import { hojaeDetail } from "@/lib/metrics/hojaeGrade";
 import { InfoTip, MetricBadge, SampleTag } from "./metrics/MetricBadge";
 
 export type RowDef = { label: string; cell: (s: Slot) => React.ReactNode; best?: (s: Slot) => number };
@@ -19,10 +20,10 @@ export const ROWS: RowDef[] = [
   { label: "초등학교", cell: (s) => `${s.complex.schoolMeters.toLocaleString()}m${s.complex.schoolMeters <= 300 ? " (초품아)" : ""}`, best: (s) => -s.complex.schoolMeters },
   { label: "지하철역", cell: (s) => `${s.complex.stationMeters.toLocaleString()}m · 강남 ${s.complex.gangnamMinutes}분`, best: (s) => -s.complex.stationMeters },
   {
-    label: "호재 (반경 3km)",
+    label: "호재 (반경 3km · 등급)",
     cell: (s) => {
       const list = nearbyHojae(s.complex);
-      return list.length ? list.map((h) => h.title).join(", ") : "없음";
+      return list.length ? list.map((h) => `${h.title} (${hojaeDetail(h).grade})`).join(", ") : "없음";
     },
     best: (s) => nearbyHojae(s.complex).length,
   },

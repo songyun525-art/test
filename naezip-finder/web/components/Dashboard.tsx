@@ -10,6 +10,7 @@ import { MetricsTable, PriceChart } from "./PriceChart";
 import { HojaePanel, Recommendations } from "./Bottom";
 import PeakRecoveryCard from "./metrics/PeakRecoveryCard";
 import RiskSummaryCard from "./metrics/RiskSummaryCard";
+import FundingCard from "./metrics/FundingCard";
 import { complexes, type Complex, IS_SAMPLE, DATA_AS_OF, JEONSE_IS_SAMPLE } from "@/lib/data";
 import { addToCompare, readCompare, writeCompare } from "@/lib/compareStore";
 import { DEFAULT_WEIGHTS, recommend, type Weights } from "@/lib/score";
@@ -135,6 +136,7 @@ export default function Dashboard() {
                 <PeakRecoveryCard slots={slots} />
                 <MetricsTable slots={slots} />
               </div>
+              <FundingCard slots={slots} />
               <RiskSummaryCard slots={slots} />
               <DetailTable slots={slots} />
             </>
