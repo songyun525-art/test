@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { cities, complexes, IS_SAMPLE, type Complex, householdsText } from "@/lib/data";
 import { bucketOf, formatEok, pct } from "@/lib/score";
+import { AddToCompare } from "./CompareTray";
 
 const TABS = ["시별 대장아파트", "1년 상승 TOP", "1년 하락 TOP", "거래 활발 TOP"] as const;
 type Tab = (typeof TABS)[number];
@@ -83,7 +84,7 @@ export default function StudyReference() {
                   <td><b>{r.c.name}</b><div className="tiny muted">{r.c.year}년{r.c.households ? ` · ${householdsText(r.c)}` : ""}</div></td>
                   <td className="muted">{r.c.city} {r.c.district}</td>
                   <td><b>{r.value}</b><div className="tiny muted">{r.sub}</div></td>
-                  <td><Link className="link-btn" href={`/?compare=${r.c.id}:${main84(r.c).area}`}>비교하기</Link></td>
+                  <td><AddToCompare id={r.c.id} area={main84(r.c).area} /></td>
                 </tr>
               ))}
             </tbody>

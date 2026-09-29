@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
+import CompareTray from "@/components/CompareTray";
 
 export const metadata: Metadata = {
   title: "윤송이의 내집찾기",
@@ -15,6 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="app">
           <Sidebar />
           <main className="main">{children}</main>
+          <CompareTray />
         </div>
       </body>
     </html>

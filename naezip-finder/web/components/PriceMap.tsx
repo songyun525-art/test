@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createMapEngine, type LatLng, type MapEngine } from "@/lib/mapEngine";
 import { complexes, hojaeList, IS_SAMPLE, regions, type Complex, householdsText } from "@/lib/data";
 import { bucketOf, formatEok, pct, totalScore, type Bucket, chgClass } from "@/lib/score";
+import { AddToCompare } from "./CompareTray";
 
 // 가격대별 색 (말풍선 테두리·점)
 const BANDS = [
@@ -171,7 +172,7 @@ export default function PriceMap() {
             종합 {totalScore(selected.c)}점 · 1년 <span className={chgClass(selected.c.growth.y1)}>{pct(selected.c.growth.y1)}</span> · 5년{" "}
             <span className={chgClass(selected.c.growth.y5)}>{pct(selected.c.growth.y5)}</span> · 역 {selected.c.stationMeters}m
           </p>
-          <Link className="cta" href={`/?compare=${selected.c.id}:${selected.area}`}>이 단지 비교하기</Link>
+          <AddToCompare id={selected.c.id} area={selected.area} className="cta" label="비교함에 담기" />
         </aside>
       )}
     </div>
