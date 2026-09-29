@@ -5,6 +5,7 @@ import Icon from "./Icon";
 import BuildingArt from "./BuildingArt";
 import { hojaeList, type Complex, type Hojae } from "@/lib/data";
 import { complexesNear, formatEok, totalScore, type Recommendation, type Weights } from "@/lib/score";
+import { ComplexName } from "./ComplexDetail";
 
 export function Recommendations({
   base,
@@ -50,7 +51,7 @@ export function Recommendations({
                 <BuildingArt seed={r.complex.art} className="rec-art" />
                 <div className="rec-body">
                   <div className="rec-title">
-                    <h3>{r.complex.name}</h3>
+                    <h3><ComplexName c={r.complex} area={r.area} /></h3>
                     <button className={isLiked ? "heart on" : "heart"} onClick={() => onToggleLike(r.complex.id)} aria-label="관심 단지">
                       <Icon name="heart" size={15} fill={isLiked} />
                     </button>

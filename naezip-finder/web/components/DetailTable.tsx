@@ -2,11 +2,11 @@ import { SLOT_COLORS, slotSize, type Slot } from "./Compare";
 import { formatEok, nearbyHojae, pct, chgClass, orLow } from "@/lib/score";
 import { householdsText } from "@/lib/data";
 
-type RowDef = { label: string; cell: (s: Slot) => React.ReactNode; best?: (s: Slot) => number };
+export type RowDef = { label: string; cell: (s: Slot) => React.ReactNode; best?: (s: Slot) => number };
 
 const pastPrice = (s: Slot, g: number) => slotSize(s).price / (1 + g);
 
-const ROWS: RowDef[] = [
+export const ROWS: RowDef[] = [
   { label: "세대수", cell: (s) => householdsText(s.complex) || "–", best: (s) => s.complex.households || -Infinity },
   { label: "연식 (사용승인)", cell: (s) => `${s.complex.year}년 (${2026 - s.complex.year}년차)`, best: (s) => s.complex.year },
   { label: "평형", cell: (s) => `전용 ${slotSize(s).area}㎡ (${slotSize(s).pyeong}평)` },

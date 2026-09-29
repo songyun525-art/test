@@ -8,6 +8,7 @@ import { complexes, regions, householdsText } from "@/lib/data";
 import { bucketOf, formatEok, pct, totalScore, type Bucket, chgClass, orLow } from "@/lib/score";
 import { AddToCompare } from "./CompareTray";
 import { useRegion } from "@/lib/region";
+import { ComplexName } from "./ComplexDetail";
 
 type Sort = "종합점수" | "가격 낮은 순" | "1년 상승률";
 
@@ -77,7 +78,7 @@ export default function FindHomes({ initialBudget }: { initialBudget: number }) 
                 <span className={i < 3 ? "rank top" : "rank"}>{i + 1}</span>
                 <BuildingArt seed={x.c.art} className="home-art" />
                 <div className="home-main">
-                  <b>{x.c.name}</b>
+                  <b><ComplexName c={x.c} area={x.s.area} /></b>
                   <span className="tiny muted">{x.c.city} {x.c.district} · {x.c.year}년{x.c.households ? ` · ${householdsText(x.c)}` : ""}</span>
                   <span className="tiny">전용 {x.s.area}㎡ ({x.s.pyeong}평) · 종합 {x.score}점 · 1년 <span className={chgClass(x.c.growth.y1)}>{pct(x.c.growth.y1)}</span></span>
                 </div>

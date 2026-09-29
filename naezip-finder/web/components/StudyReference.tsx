@@ -6,6 +6,7 @@ import { cities, complexes, IS_SAMPLE, type Complex, householdsText } from "@/li
 import { bucketOf, formatEok, pct } from "@/lib/score";
 import { AddToCompare } from "./CompareTray";
 import { useRegion } from "@/lib/region";
+import { ComplexName } from "./ComplexDetail";
 
 const TABS = ["시별 대장아파트", "1년 상승 TOP", "1년 하락 TOP", "거래 활발 TOP"] as const;
 type Tab = (typeof TABS)[number];
@@ -129,7 +130,7 @@ export default function StudyReference() {
               {rows.map((r, i) => (
                 <tr key={r.c.id}>
                   <td><span className={i < 3 ? "rank top" : "rank"}>{i + 1}</span></td>
-                  <td><b>{r.c.name}</b><div className="tiny muted">{r.c.year}년{r.c.households ? ` · ${householdsText(r.c)}` : ""}</div></td>
+                  <td><b><ComplexName c={r.c} area={main84(r.c).area} /></b><div className="tiny muted">{r.c.year}년{r.c.households ? ` · ${householdsText(r.c)}` : ""}</div></td>
                   <td className="muted">{r.c.city} {r.c.district}</td>
                   <td><b>{r.value}</b><div className="tiny muted">{r.sub}</div></td>
                   <td><AddToCompare id={r.c.id} area={main84(r.c).area} /></td>

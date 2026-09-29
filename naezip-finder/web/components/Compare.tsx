@@ -6,6 +6,7 @@ import BuildingArt from "./BuildingArt";
 import type { Complex } from "@/lib/data";
 import { formatEok } from "@/lib/score";
 import { householdsText } from "@/lib/data";
+import { ComplexName } from "./ComplexDetail";
 
 export const SLOT_COLORS = ["#e5484d", "#3e7bfa", "#2e9e5b"];
 
@@ -76,7 +77,7 @@ export default function Compare({
             <article key={s.complex.id} className="complex-card">
               <div className="card-title">
                 <span className="num" style={{ background: SLOT_COLORS[i] }}>{i + 1}</span>
-                <h3>{s.complex.name}</h3>
+                <h3><ComplexName c={s.complex} area={s.area} /></h3>
                 <button
                   className={isLiked ? "heart on" : "heart"}
                   onClick={() => onToggleLike(s.complex.id)}

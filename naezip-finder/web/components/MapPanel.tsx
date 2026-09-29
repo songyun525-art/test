@@ -7,6 +7,7 @@ import SketchMap, { type MapPin } from "./SketchMap";
 import { hojaeList, regions } from "@/lib/data";
 import { formatEok, type Recommendation } from "@/lib/score";
 import { SLOT_COLORS, slotPrice, type Slot } from "./Compare";
+import { ComplexName } from "./ComplexDetail";
 
 export default function MapPanel({
   slots,
@@ -69,7 +70,7 @@ export default function MapPanel({
               ))}
               {recs.map((r) => (
                 <tr key={`${r.complex.id}-${r.area}`}>
-                  <td><span className="dot" style={{ background: "#4b5563" }} />{r.complex.name} <span className="muted">{r.area}㎡</span></td>
+                  <td><span className="dot" style={{ background: "#4b5563" }} /><ComplexName c={r.complex} area={r.area} /> <span className="muted">{r.area}㎡</span></td>
                   <td className="muted">{r.complex.city}</td>
                   <td className="num-cell">{formatEok(r.price)}</td>
                 </tr>
