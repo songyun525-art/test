@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { cities, complexes, IS_SAMPLE, type Complex, householdsText } from "@/lib/data";
 import { bucketOf, formatEok, pct } from "@/lib/score";
 import { AddToCompare } from "./CompareTray";
@@ -20,11 +20,34 @@ const STEPS = [
 const main84 = (c: Complex) => c.sizes.find((s) => bucketOf(s.area) === "84") ?? c.sizes[c.sizes.length - 1];
 const perPyeong = (c: Complex) => (main84(c).price * 10000) / main84(c).pyeong; // 만원/평
 const trades = (c: Complex) => c.sizes.reduce((s, z) => s + z.trades, 0);
+const LIMITS = [10, 30, 50, 100];
+
+/** 시 안의 구·동 목록: "팔달구 우만동" → { 팔달구: [우만동, …] } (구가 없는 시는 동만) */
+function areasOf(city: string) {
+  const map = new Map<string, Set<string>>();
+  for (const c of complexes) {
+    if (c.city !== city || !c.district) continue;
+    const [first, ...rest] = c.district.split(" ");
+    const gu = rest.length && first.endsWith("구") ? first : "";
+    const dong = gu ? rest.join(" ") : c.district;
+    if (!map.has(gu)) map.set(gu, new Set());
+    map.get(gu)!.add(dong);
+  }
+  return [...map.entries()].sort(([a], [b]) => a.localeCompare(b, "ko")).map(([gu, dongs]) => ({ gu, dongs: [...dongs].sort((a, b) => a.localeCompare(b, "ko")) }));
+}
 
 export default function StudyReference() {
   const [tab, setTab] = useState<Tab>("시별 대장아파트");
   const [city, setCity] = useRegion();
-  const pool = complexes.filter((c) => city === "경기도 전체" || c.city === city);
+  const [limit, setLimit] = useState(10);
+  // 구·동 선택: "" 은 시 전체, "구:" 로 시작하면 구 전체, 그 밖에는 district 그대로
+  const [area, setArea] = useState({ city: "", value: "" });
+  const areaValue = area.city === city ? area.value : "";
+  const areas = useMemo(() => (city === "경기도 전체" ? [] : areasOf(city)), [city]);
+  const inArea = (c: Complex) =>
+    !areaValue || (areaValue.startsWith("구:") ? c.district.startsWith(areaValue.slice(2) + " ") : c.district === areaValue);
+  const pool = complexes.filter((c) => (city === "경기도 전체" || c.city === city) && inArea(c));
+  const areaLabel = !areaValue ? city : areaValue.startsWith("구:") ? `${city} ${areaValue.slice(2)}` : `${city} ${areaValue}`;
 
   let rows: { c: Complex; value: React.ReactNode; sub?: string }[] = [];
   if (tab === "시별 대장아파트") {
@@ -43,7 +66,8 @@ export default function StudyReference() {
   } else {
     rows = [...pool].sort((a, b) => trades(b) - trades(a)).map((c) => ({ c, value: `${trades(c)}건`, sub: "최근 3개월" }));
   }
-  rows = rows.slice(0, 10);
+  const total = rows.length;
+  rows = rows.slice(0, limit);
 
   return (
     <div className="grid study-grid">
@@ -67,10 +91,33 @@ export default function StudyReference() {
               <button key={t} className={tab === t ? "pill on" : "pill"} onClick={() => setTab(t)}>{t}</button>
             ))}
           </div>
-          <select className="right" value={city} onChange={(e) => setCity(e.target.value)} aria-label="지역">
-            {["경기도 전체", ...cities].map((c) => <option key={c}>{c}</option>)}
-          </select>
+          <div className="right study-filters">
+            <select value={city} onChange={(e) => setCity(e.target.value)} aria-label="지역">
+              {["경기도 전체", ...cities].map((c) => <option key={c}>{c}</option>)}
+            </select>
+            {areas.length > 0 && (
+              <select value={areaValue} onChange={(e) => setArea({ city, value: e.target.value })} aria-label="구·동">
+                <option value="">{city} 전체</option>
+                {areas.map(({ gu, dongs }) =>
+                  gu ? (
+                    <optgroup key={gu} label={gu}>
+                      <option value={`구:${gu}`}>{gu} 전체</option>
+                      {dongs.map((d) => <option key={d} value={`${gu} ${d}`}>{d}</option>)}
+                    </optgroup>
+                  ) : (
+                    dongs.map((d) => <option key={d} value={d}>{d}</option>)
+                  ),
+                )}
+              </select>
+            )}
+            <select value={limit} onChange={(e) => setLimit(Number(e.target.value))} aria-label="몇 위까지">
+              {LIMITS.map((n) => <option key={n} value={n}>TOP {n}</option>)}
+            </select>
+          </div>
         </div>
+        {tab !== "시별 대장아파트" || city !== "경기도 전체" ? (
+          <p className="tiny muted study-count">{areaLabel} · {total.toLocaleString()}곳{total > limit ? ` 중 TOP ${limit}` : " 모두"}</p>
+        ) : null}
         {rows.length === 0 ? (
           <p className="empty muted">이 지역에는 해당하는 단지가 없어요.</p>
         ) : (
